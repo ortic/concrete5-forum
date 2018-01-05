@@ -2,7 +2,6 @@
     <thead>
     <tr>
         <th><?= t('Subject') ?></th>
-        <th></th>
     </tr>
     </thead>
     <tbody>

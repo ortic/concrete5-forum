@@ -40,8 +40,4 @@ class Controller extends Package
         $ci->importContentFile($pkg->getPackagePath() . '/install.xml');
     }
 
-    public function on_start()
-    {
-        User::loginByUserId(1);
-    }
 }

@@ -12,11 +12,14 @@ use Package;
 
 class Forum extends PageTypeController
 {
-    /** @var string */
+    /** @var string the url part below the current page */
     protected $parameter;
 
-    /** @var array */
+    /** @var array the url sections below the current page */
     protected $pageParameters;
+
+    /** @var string the last url part below the current page */
+    protected $lastParameter;
 
     /**
      * Override core controller validation to make it possible to use pretty urls
@@ -33,15 +36,19 @@ class Forum extends PageTypeController
     {
         $this->pageParameters = $parameters;
         $this->parameter = join('/', $parameters);
+        $this->lastParameter = end($parameters);
 
         return true;
     }
 
     public function view()
     {
-        switch ($this->parameter) {
+        switch ($this->lastParameter) {
             case '_new':
-                $this->writeMessage();
+                $this->writeTopic();
+                break;
+            case '_answer':
+                $this->writeAnswer();
                 break;
             case '':
                 $this->showForum();
@@ -56,18 +63,46 @@ class Forum extends PageTypeController
     {
         $pkg = Package::getByHandle('ortic_forum');
         $em = $pkg->getEntityManager();
-        $topic = $em->getRepository('Concrete\Package\OrticForum\Src\Entity\ForumMessage')->findOneBy(['slug' => $this->parameter]);
+        $topic = $em->getRepository('Concrete\Package\OrticForum\Src\Entity\ForumMessage')->findOneBy(['slug' => $this->parameters[0]]);
 
         if (!$topic) {
             $this->replace('/page_not_found');
         }
 
+        $messageList = new ForumMessageList();
+        $messageList->filterByParent($topic->getID());
+        $messages = $messageList->getResults();
+
         $this->set('topic', $topic);
+        $this->set('messages', $messages);
 
         $this->render('topic', 'ortic_forum');
     }
 
-    protected function writeMessage()
+    protected function writeAnswer() {
+        $pkg = Package::getByHandle('ortic_forum');
+        $em = $pkg->getEntityManager();
+        $topic = $em->getRepository('Concrete\Package\OrticForum\Src\Entity\ForumMessage')->findOneBy(['slug' => $this->parameters[0]]);
+
+        $user = new User();
+        $page = Page::getCurrentPage();
+
+        $object = new ForumMessage();
+        $object->setSubject($this->post('subject'));
+        $object->setParentId($topic->getID());
+        $object->setMessage($this->post('message'));
+        $object->setDateCreated(new \DateTime);
+        $object->setDateUpdated(new \DateTime);
+        $object->setUserId($user->getUserId());
+        $object->setPageId($page->getCollectionId());
+
+        $em->persist($object);
+        $em->flush();
+
+        $this->showTopic();
+    }
+
+    protected function writeTopic()
     {
         $pkg = Package::getByHandle('ortic_forum');
         $txt = Core::make('helper/text');
@@ -95,6 +130,7 @@ class Forum extends PageTypeController
     protected function showForum()
     {
         $messages = new ForumMessageList();
+        $messages->filterByTopics();
 
         $pagination = $messages->getPagination();
         $results = $pagination->getCurrentPageResults();

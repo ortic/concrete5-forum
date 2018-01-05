@@ -4,6 +4,7 @@ namespace Concrete\Package\OrticForum\Src;
 
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
 use Concrete\Core\Search\Pagination\Pagination;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Package;
 
@@ -15,9 +16,27 @@ class ForumMessageList extends DatabaseItemList
             ->from('OrticForumMessages', 'm');
     }
 
-    public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
+    public function finalizeQuery(QueryBuilder $query)
     {
         return $query;
+    }
+
+    /**
+     * Restrict list to topics and not their answers
+     */
+    public function filterByTopics()
+    {
+        $this->query->where('m.parentMessageID is null');
+    }
+
+    /**
+     * Restricts the message list to answers of a certain topic defined by $parentMessageID
+     *
+     * @param $parentMessageID
+     */
+    public function filterByParent($parentMessageID)
+    {
+        $this->query->where('m.parentMessageID = :parentMessageId')->setParameter('parentMessageId', $parentMessageID);
     }
 
     /**
@@ -60,6 +79,10 @@ class ForumMessageList extends DatabaseItemList
         return $message;
     }
 
+    /**
+     * Not implemented since we aren't using attributes, but we still derive from DatabaseItemList as we get some
+     * useful functionality for free.
+     */
     protected function getAttributeKeyClassName()
     {
     }
