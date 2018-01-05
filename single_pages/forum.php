@@ -1,15 +1,30 @@
+<?php
+$date = Core::make('date');
+
+?>
+
 <table class="table">
     <thead>
-    <tr>
-        <th><?= t('Subject') ?></th>
-    </tr>
+        <tr>
+            <th><?= t('Subject') ?></th>
+            <th><?= t('Date') ?></th>
+            <th></th>
+        </tr>
     </thead>
     <tbody>
-    <?php foreach ($results as $message) { ?>
+    <?php foreach ($topics as $topic) { ?>
         <tr>
             <td>
-                <a href="<?= $this->action($message->getSlug()) ?>">
-                    <?= $message->getSubject() ?>
+                <a href="<?= $this->action($topic->getSlug()) ?>">
+                    <?= $topic->getSubject() ?>
+                </a>
+            </td>
+            <td>
+                <?= $date->formatDateTime($topic->getDateCreated()) ?>
+            </td>
+            <td class="text-right">
+                <a href="<?= $this->action($topic->getSlug()) ?>" class="btn btn-xs btn-primary">
+                    <?= t('Show Topic') ?>
                 </a>
             </td>
         </tr>
@@ -18,18 +33,18 @@
     </tbody>
 </table>
 
-<?=$pagination->renderView()?>
+<?= $pagination->renderView() ?>
 
 <hr>
 
-<form method="POST" action="<?=$this->action('_new')?>">
+<form method="POST" action="<?= $this->action('_new') ?>">
     <div class="form-group">
-        <label for="subject"><?=t('Subject')?></label>
+        <label for="subject"><?= t('Subject') ?></label>
         <input type="text" class="form-control" name="subject" id="subject" placeholder="">
     </div>
     <div class="form-group">
-        <label for="message"><?=t('Message')?></label>
+        <label for="message"><?= t('Message') ?></label>
         <textarea type="text" class="form-control" name="message" id="message" placeholder=""></textarea>
     </div>
-    <button class="btn btn-primary"><?=t('Post Message')?></button>
+    <button class="btn btn-primary"><?= t('Post Message') ?></button>
 </form>

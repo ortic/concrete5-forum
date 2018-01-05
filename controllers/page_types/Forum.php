@@ -71,6 +71,7 @@ class Forum extends PageTypeController
 
         $messageList = new ForumMessageList();
         $messageList->filterByParent($topic->getID());
+        $messageList->sortBy('dateCreated', 'asc');
         $messages = $messageList->getResults();
 
         $this->set('topic', $topic);
@@ -129,13 +130,14 @@ class Forum extends PageTypeController
 
     protected function showForum()
     {
-        $messages = new ForumMessageList();
-        $messages->filterByTopics();
+        $topicList = new ForumMessageList();
+        $topicList->filterByTopics();
+        $topicList->sortBy('dateCreated', 'desc');
 
-        $pagination = $messages->getPagination();
-        $results = $pagination->getCurrentPageResults();
+        $pagination = $topicList->getPagination();
+        $topics = $pagination->getCurrentPageResults();
 
-        $this->set('results', $results);
+        $this->set('topics', $topics);
         $this->set('pagination', $pagination);
 
         $this->render('forum', 'ortic_forum');

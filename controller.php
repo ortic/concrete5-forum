@@ -1,9 +1,9 @@
 <?php
+
 namespace Concrete\Package\OrticForum;
 
 use Concrete\Core\Backup\ContentImporter;
 use Package;
-use User;
 
 class Controller extends Package
 {
