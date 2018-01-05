@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+    <pagetemplates>
+        <pagetemplate icon="blank.png" name="Forum" handle="forum" package="ortic_forum" internal="0"/>
+    </pagetemplates>
+    <pagetypes>
+        <pagetype handle="Forum" name="Forum" package="ortic_forum" is-frequently-added="0">
+            <target handle="all" package="ortic_forum"/>
+        </pagetype>
+    </pagetypes>
+</concrete5-cif>
