@@ -3,7 +3,9 @@
 namespace Concrete\Package\OrticForum;
 
 use Concrete\Core\Backup\ContentImporter;
+use Concrete\Package\OrticForum\Src\Repository\Forum;
 use Package;
+use Core;
 
 class Controller extends Package
 {
@@ -40,4 +42,10 @@ class Controller extends Package
         $ci->importContentFile($pkg->getPackagePath() . '/install.xml');
     }
 
+    public function on_start()
+    {
+        Core::bind('ortic/forum', function () {
+            return new Forum();
+        });
+    }
 }

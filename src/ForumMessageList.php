@@ -26,7 +26,17 @@ class ForumMessageList extends DatabaseItemList
      */
     public function filterByTopics()
     {
-        $this->query->where('m.parentMessageID is null');
+        $this->query->andWhere('m.parentMessageID is null');
+    }
+
+    /**
+     * Filter by forum (page) ID
+     *
+     * @param $forumId
+     */
+    public function filterByForumId($forumId)
+    {
+        $this->query->andWhere('m.cID = :cID')->setParameter('cID', $forumId);
     }
 
     /**

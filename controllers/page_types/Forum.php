@@ -22,27 +22,21 @@ class Forum extends PageTypeController
     protected $lastParameter;
 
     /**
-     * Override core controller validation to make it possible to use pretty urls
-     * as methods of our page type controller.
+     * We handle all our magic methods through view(..). Since we handle various actions with a single method we
+     * can't name our arguments very well.
      *
-     * By return true concrete5 will think of anything below a page of this type
-     * as valid and thus invoke this controller.
-     *
-     * @param $action
-     * @param array $parameters
-     * @return bool
+     * @param null $a
+     * @param null $b
+     * @param null $c
+     * @param null $d
      */
-    public function isValidControllerTask($action, $parameters = array())
+    public function view($a = null, $b = null, $c = null, $d = null)
     {
+        $parameters = func_get_args();
         $this->pageParameters = $parameters;
         $this->parameter = join('/', $parameters);
         $this->lastParameter = end($parameters);
 
-        return true;
-    }
-
-    public function view()
-    {
         switch ($this->lastParameter) {
             case '_new':
                 $this->writeTopic();
@@ -59,20 +53,19 @@ class Forum extends PageTypeController
         }
     }
 
+    /**
+     * Displays all messages from a single topic
+     */
     protected function showTopic()
     {
-        $pkg = Package::getByHandle('ortic_forum');
-        $em = $pkg->getEntityManager();
-        $topic = $em->getRepository('Concrete\Package\OrticForum\Src\Entity\ForumMessage')->findOneBy(['slug' => $this->parameters[0]]);
+        $forum = Core::make('ortic/forum');
+        $topic = $forum->getTopic($this->parameters[0]);
 
         if (!$topic) {
             $this->replace('/page_not_found');
         }
 
-        $messageList = new ForumMessageList();
-        $messageList->filterByParent($topic->getID());
-        $messageList->sortBy('dateCreated', 'asc');
-        $messages = $messageList->getResults();
+        $messages = $forum->getMessages($topic);
 
         $this->set('topic', $topic);
         $this->set('messages', $messages);
@@ -80,59 +73,38 @@ class Forum extends PageTypeController
         $this->render('topic', 'ortic_forum');
     }
 
-    protected function writeAnswer() {
-        $pkg = Package::getByHandle('ortic_forum');
-        $em = $pkg->getEntityManager();
-        $topic = $em->getRepository('Concrete\Package\OrticForum\Src\Entity\ForumMessage')->findOneBy(['slug' => $this->parameters[0]]);
+    /**
+     * Adds a message to an existing topic
+     */
+    protected function writeAnswer()
+    {
+        $forum = Core::make('ortic/forum');
+        $topic = $forum->getTopic($this->parameters[0]);
 
-        $user = new User();
-        $page = Page::getCurrentPage();
-
-        $object = new ForumMessage();
-        $object->setSubject($this->post('subject'));
-        $object->setParentId($topic->getID());
-        $object->setMessage($this->post('message'));
-        $object->setDateCreated(new \DateTime);
-        $object->setDateUpdated(new \DateTime);
-        $object->setUserId($user->getUserId());
-        $object->setPageId($page->getCollectionId());
-
-        $em->persist($object);
-        $em->flush();
+        $forum = Core::make('ortic/forum');
+        $forum->writeAnswer($topic, $this->post('message'));
 
         $this->showTopic();
     }
 
+    /**
+     * Adds a new topic to the current forum (page)
+     */
     protected function writeTopic()
     {
-        $pkg = Package::getByHandle('ortic_forum');
-        $txt = Core::make('helper/text');
-
-        $em = $pkg->getEntityManager();
-
-        $user = new User();
-        $page = Page::getCurrentPage();
-
-        $object = new ForumMessage();
-        $object->setSubject($this->post('subject'));
-        $object->setSlug($txt->urlify($this->post('subject'))); // @TODO ensure this is unique
-        $object->setMessage($this->post('message'));
-        $object->setDateCreated(new \DateTime);
-        $object->setDateUpdated(new \DateTime);
-        $object->setUserId($user->getUserId());
-        $object->setPageId($page->getCollectionId());
-
-        $em->persist($object);
-        $em->flush();
+        $forum = Core::make('ortic/forum');
+        $forum->writeTopic($this->post('subject'), $this->post('message'));
 
         $this->showForum();
     }
 
+    /**
+     * Displays all topics of the current forum (page)
+     */
     protected function showForum()
     {
-        $topicList = new ForumMessageList();
-        $topicList->filterByTopics();
-        $topicList->sortBy('dateCreated', 'desc');
+        $forum = Core::make('ortic/forum');
+        $topicList = $forum->getTopics();
 
         $pagination = $topicList->getPagination();
         $topics = $pagination->getCurrentPageResults();
