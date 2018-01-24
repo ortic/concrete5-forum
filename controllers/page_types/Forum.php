@@ -3,12 +3,7 @@
 namespace Concrete\Package\OrticForum\Controller\PageType;
 
 use Concrete\Core\Page\Controller\PageTypeController;
-use Concrete\Package\OrticForum\Src\Entity\ForumMessage;
-use Concrete\Package\OrticForum\Src\ForumMessageList;
-use User;
-use Page;
 use Core;
-use Package;
 
 class Forum extends PageTypeController
 {

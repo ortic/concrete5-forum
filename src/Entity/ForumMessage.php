@@ -1,6 +1,7 @@
 <?php
 
 namespace Concrete\Package\OrticForum\Src\Entity;
+use Concrete\Core\Entity\User\User;
 
 /**
  * @Entity
@@ -21,9 +22,10 @@ class ForumMessage
     protected $pageId;
 
     /**
-     * @Column(name="uID", type="integer", options={"unsigned"=true})
-     */
-    protected $userId;
+     * @ManyToOne(targetEntity="\Concrete\Core\Entity\User\User")
+     * @JoinColumn(name="userId", referencedColumnName="uID", onDelete="SET NULL")
+     **/
+    public $user;
 
     /**
      * @Column(name="parentMessageID", nullable=true, type="integer", options={"unsigned"=true})
@@ -214,6 +216,24 @@ class ForumMessage
     public function setDateUpdated($dateUpdated)
     {
         $this->dateUpdated = $dateUpdated;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User $user
+     * @return $this
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
         return $this;
     }
 

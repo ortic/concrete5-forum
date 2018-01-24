@@ -1,23 +1,27 @@
 <?php
 $date = Core::make('date');
-
 ?>
 
 <table class="table">
     <thead>
-        <tr>
-            <th><?= t('Subject') ?></th>
-            <th><?= t('Date') ?></th>
-            <th></th>
-        </tr>
+    <tr>
+        <th><?= t('Subject') ?></th>
+        <th><?= t('Author') ?></th>
+        <th><?= t('Date') ?></th>
+        <th></th>
+    </tr>
     </thead>
     <tbody>
-    <?php foreach ($topics as $topic) { ?>
+    <?php foreach ($topics as $topic) {
+        ?>
         <tr>
             <td>
                 <a href="<?= $this->action($topic->getSlug()) ?>">
                     <?= $topic->getSubject() ?>
                 </a>
+            </td>
+            <td>
+                <?php View::element('user_link', ['user' => $topic->user], 'ortic_forum') ?>
             </td>
             <td>
                 <?= $date->formatDateTime($topic->getDateCreated()) ?>

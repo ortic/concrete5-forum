@@ -6,6 +6,7 @@ use Concrete\Package\OrticForum\Src\Entity\ForumMessage;
 use Concrete\Package\OrticForum\Src\ForumMessageList;
 use Package;
 use Page;
+use Core;
 use User;
 
 class Forum
@@ -58,7 +59,7 @@ class Forum
         $forumMessage->setMessage($message);
         $forumMessage->setDateCreated(new \DateTime);
         $forumMessage->setDateUpdated(new \DateTime);
-        $forumMessage->setUserId($user->getUserId());
+        $forumMessage->setUser($user->getUserInfoObject()->getEntityObject());
         $forumMessage->setPageId($page->getCollectionId());
         $forumMessage->setParentId($topic->getID());
 
@@ -88,7 +89,7 @@ class Forum
         $object->setMessage($message);
         $object->setDateCreated(new \DateTime);
         $object->setDateUpdated(new \DateTime);
-        $object->setUserId($user->getUserId());
+        $object->setUser($user->getUserInfoObject()->getEntityObject());
         $object->setPageId($page->getCollectionId());
 
         $em->persist($object);
