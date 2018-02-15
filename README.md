@@ -8,6 +8,11 @@ Instead of using pages for everything, this forum uses a lean structure that sho
 attribute based solution. In order to handle the requests and still have clean urls, we are overriding the view method
 in the page type controller. That way we can handle all requests in an elegant way and keep SEO friendly URLs.
 
+## Installation
+
+Copy the content of this repository to your packages directory and save everything in a folder called `ortic_forum`.
+The package will create a new page type called `Forum`. Simply create a new page of that type to add a forum to your sitemap.
+
 ## What's missing
 
 * Validation
