@@ -6,6 +6,7 @@ use Concrete\Core\Backup\ContentImporter;
 use Concrete\Package\OrticForum\Src\Repository\Forum;
 use Package;
 use Core;
+use Concrete\Core\Asset\AssetList;
 
 class Controller extends Package
 {
@@ -42,10 +43,31 @@ class Controller extends Package
         $ci->importContentFile($pkg->getPackagePath() . '/install.xml');
     }
 
-    public function on_start()
+    protected function registerRepositories()
     {
         Core::bind('ortic/forum', function () {
             return new Forum();
         });
+    }
+
+    protected function registerAssets()
+    {
+        $al = AssetList::getInstance();
+        $pkg = Package::getByHandle($this->pkgHandle);
+
+        $al->register('javascript', 'ortic/forum', 'js/forum.js',
+            ['minify' => true, 'combine' => true], $pkg
+        );
+
+        $al->registerGroup('ortic/forum', [
+            ['javascript', 'jquery'],
+            ['javascript', 'ortic/forum'],
+        ]);
+    }
+
+    public function on_start()
+    {
+        $this->registerRepositories();
+        $this->registerAssets();
     }
 }

@@ -4,6 +4,7 @@ namespace Concrete\Package\OrticForum\Controller\PageType;
 
 use Concrete\Core\Page\Controller\PageTypeController;
 use Core;
+use User;
 
 class Forum extends PageTypeController
 {
@@ -31,56 +32,87 @@ class Forum extends PageTypeController
         $this->pageParameters = $parameters;
         $this->parameter = join('/', $parameters);
         $this->lastParameter = end($parameters);
-
-        switch ($this->lastParameter) {
-            case '_new':
-                $this->writeTopic();
-                break;
-            case '_answer':
-                $this->writeAnswer();
-                break;
-            case '':
-                $this->showForum();
-                break;
-            default:
-                $this->showTopic();
-                break;
+        $method = 'showTopic'; //default
+        if ($this->lastParameter == '') {
+            $method = 'showForum'; //show the forum if we have no params
+        } else if ($this->getRequest()->isPost()) { //only call these if posted
+            switch ($this->lastParameter) {
+                case '_new':
+                    $method = 'writeTopic';
+                    break;
+                case '_answer':
+                    $method = 'writeAnswer';
+                    break;
+                case '_edit':
+                    $method = 'updateMessage';
+                    break;
+            }
         }
+
+        // call the appropriate method, passing parameters as parameters to the function
+        call_user_func_array([$this, $method], $parameters);
     }
 
     /**
      * Displays all messages from a single topic
+     * @param string $slug
      */
-    protected function showTopic()
+    protected function showTopic(string $slug)
     {
+        $this->requireAsset('ortic/forum');
+
         $forum = Core::make('ortic/forum');
-        $topic = $forum->getTopic($this->parameters[0]);
+        $topic = $forum->getTopic($slug);
 
         if (!$topic) {
             $this->replace('/page_not_found');
         }
 
         $messages = $forum->getMessages($topic);
+        array_unshift($messages, $topic);
 
         $this->set('topic', $topic);
         $this->set('messages', $messages);
+        $this->set('user', new User());
 
         $this->render('topic', 'ortic_forum');
     }
 
     /**
      * Adds a message to an existing topic
+     * @param string $slug
      */
-    protected function writeAnswer()
+    protected function writeAnswer(string $slug)
     {
         $forum = Core::make('ortic/forum');
-        $topic = $forum->getTopic($this->parameters[0]);
+        $topic = $forum->getTopic($slug);
 
         $forum = Core::make('ortic/forum');
         $forum->writeAnswer($topic, $this->post('message'));
 
-        $this->showTopic();
+        $this->showTopic($slug);
     }
+
+    /**
+     * Updates an existing message
+     * @param string $slug
+     * @param int $messageId
+     */
+    protected function updateMessage(string $slug, int $messageId)
+    {
+        $forum = Core::make('ortic/forum');
+        $message = $forum->getMessage($messageId);
+        $user = new User();
+
+        if ($user->getUserId() != $message->user->getUserId()) {
+            $this->showTopic($slug);
+            return;
+        }
+        $forum->updateMessage($message, $this->post('message'));
+
+        $this->showTopic($slug);
+    }
+
 
     /**
      * Adds a new topic to the current forum (page)

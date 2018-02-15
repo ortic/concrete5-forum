@@ -1,33 +1,40 @@
 <h1><?= $topic->getSubject() ?></h1>
 
-<div class="ortic-forum-message row">
-    <div class="col-xs-1">
-        <?php View::element('user_avatar', ['user' => $topic->user], 'ortic_forum') ?>
-    </div>
-    <div class="col-xs-11">
-        <div>
-            <strong><?php View::element('user_link', ['user' => $topic->user], 'ortic_forum') ?></strong>
-            <?=Core::make('helper/date')->formatDateTime($topic->getDateCreated())?>
-        </div>
-        <p>
-            <?= nl2br($topic->getMessage()) ?>
-        </p>
-    </div>
-</div>
+<?php foreach ($messages as $message) {
+    $userIsOwner = ($user->getUserId() == $message->user->getUserId());
+    ?>
+    <div class="ortic-forum-message row thumbnail">
 
-<?php foreach ($messages as $message) { ?>
-    <div class="ortic-forum-message row">
         <div class="col-xs-1">
             <?php View::element('user_avatar', ['user' => $message->user], 'ortic_forum') ?>
         </div>
         <div class="col-xs-11">
             <div>
                 <strong><?php View::element('user_link', ['user' => $message->user], 'ortic_forum') ?></strong>
-                <?=Core::make('helper/date')->formatDateTime($topic->getDateCreated())?>
+                <?= Core::make('helper/date')->formatDateTime($topic->getDateCreated()) ?>
+                | <?php if ($userIsOwner) { ?>
+                    <a class="ortic-forum-edit">
+                        <?= t('Edit') ?>
+                    </a>
+                    <a class="ortic-forum-edit-cancel" style="display: none;">
+                        <?= t('Cancel') ?>
+                    </a>
+                <?php } ?>
             </div>
-            <p>
-                <?= nl2br($message->getMessage()) ?>
-            </p>
+            <div class="ortic-forum-message-text">
+                <p>
+                    <?= nl2br($message->getMessage()) ?>
+                </p>
+            </div>
+            <div class="ortic-forum-message-edit" style="display: none;">
+                <form method="POST"
+                      action="<?= $this->action($topic->getSlug() . '/' . $message->getID() . '/_edit') ?>">
+                    <textarea type="text" class="form-control" name="message" id="message"
+                              placeholder=""><?= $message->getMessage() ?></textarea>
+                    <button class="btn btn-primary"><?= t('Save') ?></button>
+                </form>
+            </div>
+
         </div>
     </div>
 <?php } ?>
