@@ -3,7 +3,7 @@
 <?php foreach ($messages as $message) {
     $userIsOwner = ($user->getUserId() == $message->user->getUserId());
     ?>
-    <div class="ortic-forum-message row thumbnail">
+    <div class="ortic-forum-message row thumbnail" id="message-<?=$message->getID()?>">
 
         <div class="col-xs-1">
             <?php View::element('user_avatar', ['user' => $message->user], 'ortic_forum') ?>

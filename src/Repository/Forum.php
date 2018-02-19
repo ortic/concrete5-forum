@@ -26,6 +26,20 @@ class Forum
     }
 
     /**
+     * Returns a topic by id
+     *
+     * @param int $id
+     * @return mixed
+     */
+    public function getTopicById(int $id)
+    {
+        $pkg = Package::getByHandle('ortic_forum');
+        $em = $pkg->getEntityManager();
+        $topic = $em->getRepository('Concrete\Package\OrticForum\Src\Entity\ForumMessage')->find($id);
+        return $topic;
+    }
+
+    /**
      * Returns a message by id
      *
      * @param int $id
@@ -89,17 +103,17 @@ class Forum
      * @param string $messageTxt
      */
     public function updateMessage(ForumMessage $message, string $messageTxt)
-     {
-         $pkg = Package::getByHandle('ortic_forum');
+    {
+        $pkg = Package::getByHandle('ortic_forum');
 
-         $em = $pkg->getEntityManager();
+        $em = $pkg->getEntityManager();
 
-         $message->setMessage($messageTxt);
-         $message->setDateUpdated(new \DateTime);
+        $message->setMessage($messageTxt);
+        $message->setDateUpdated(new \DateTime);
 
-         $em->persist($message);
-         $em->flush();
-     }
+        $em->persist($message);
+        $em->flush();
+    }
 
     /**
      * Adds a new topic to the current forum (page)
@@ -132,6 +146,7 @@ class Forum
 
     /**
      * Returns a list of all topics part of the current forum (page)
+     *
      * @return ForumMessageList
      */
     public function getTopics()
@@ -144,5 +159,24 @@ class Forum
         $topicList->sortBy('dateCreated', 'desc');
 
         return $topicList;
+    }
+
+    /**
+     * Returns a link to the topic or messages specified by $message
+     *
+     * @param ForumMessage $message
+     * @return string
+     */
+    public function getLink(ForumMessage $message)
+    {
+        $page = Page::getByID($message->getPageId());
+        $pageLink = $page->getCollectionLink();
+
+        if ($message->getParentId()) {
+            $topic = $this->getTopicById($message->getParentId());
+            return $pageLink . '/' . $topic->getSlug() . '#message-' . $message->getId();
+        } else {
+            return $pageLink . '/' . $message->getSlug();
+        }
     }
 }

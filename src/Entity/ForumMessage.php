@@ -1,7 +1,9 @@
 <?php
 
 namespace Concrete\Package\OrticForum\Src\Entity;
+
 use Concrete\Core\Entity\User\User;
+use Core;
 
 /**
  * @Entity
@@ -235,6 +237,15 @@ class ForumMessage
     {
         $this->user = $user;
         return $this;
+    }
+
+    /**
+     * Returns a direct link to the message
+     */
+    public function getLink()
+    {
+        $forum = Core::make('ortic/forum');
+        return $forum->getLink($this);
     }
 
 }

@@ -4,6 +4,7 @@ namespace Concrete\Package\OrticForum\Src;
 
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
 use Concrete\Core\Search\Pagination\Pagination;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Package;
@@ -47,6 +48,17 @@ class ForumMessageList extends DatabaseItemList
     public function filterByParent($parentMessageID)
     {
         $this->query->where('m.parentMessageID = :parentMessageId')->setParameter('parentMessageId', $parentMessageID);
+    }
+
+    /**
+     * Filters messages by the forum (page) id they belong to. Specify the concrete5 internal collection/page id as an
+     * array
+     *
+     * @param array $includedForumIds
+     */
+    public function filterByForumIds(array $includedForumIds)
+    {
+        $this->query->where('m.cID IN (:cIDs)')->setParameter('cIDs', $includedForumIds, Connection::PARAM_INT_ARRAY);
     }
 
     /**
