@@ -1,5 +1,5 @@
 {
-  "name": "ortic/concrete5-forum",
+  "name": "ortic/ortic_forum",
   "type": "concrete5-package",
   "license": "MIT",
   "keywords": ["concrete5"],
