@@ -1,4 +1,4 @@
-<h1><?= $topic->getSubject() ?></h1>
+<h1><?= $currentPage->getCollectionName() ?></h1>
 
 <?php foreach ($messages as $message) {
     $userIsOwner = ($user->getUserId() == $message->user->getUserId());
@@ -11,7 +11,7 @@
         <div class="col-xs-11">
             <div>
                 <strong><?php View::element('user_link', ['user' => $message->user], 'ortic_forum') ?></strong>
-                <?= Core::make('helper/date')->formatDateTime($topic->getDateCreated()) ?>
+                <?= Core::make('helper/date')->formatDateTime($currentPage->getCollectionDateLastModified()) ?>
                 | <?php if ($userIsOwner) { ?>
                     <a class="ortic-forum-edit">
                         <?= t('Edit') ?>
@@ -27,8 +27,7 @@
                 </p>
             </div>
             <div class="ortic-forum-message-edit" style="display: none;">
-                <form method="POST"
-                      action="<?= $this->action($topic->getSlug() . '/' . $message->getID() . '/_edit') ?>">
+                <form method="POST" action="<?= $this->action('updateMessage', [$message->getID()]) ?>">
                     <textarea type="text" class="form-control" name="message" id="message"
                               placeholder=""><?= $message->getMessage() ?></textarea>
                     <button class="btn btn-primary"><?= t('Save') ?></button>
@@ -41,7 +40,7 @@
 
 <hr>
 
-<form method="POST" action="<?= $this->action($topic->getSlug() . '/_answer') ?>">
+<form method="POST" action="<?= $this->action('writeAnswer') ?>">
     <div class="form-group">
         <label for="message"><?= t('Message') ?></label>
         <textarea type="text" class="form-control" name="message" id="message" placeholder=""></textarea>

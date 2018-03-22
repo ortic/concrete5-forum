@@ -2,29 +2,17 @@
 
 namespace Concrete\Package\OrticForum\Src\Repository;
 
+use Concrete\Core\Page\PageList;
 use Concrete\Package\OrticForum\Src\Entity\ForumMessage;
 use Concrete\Package\OrticForum\Src\ForumMessageList;
 use Package;
 use Page;
-use Core;
 use User;
+use PageType;
+use PageTemplate;
 
 class Forum
 {
-    /**
-     * Returns a topic by the url slug
-     *
-     * @param string $slug
-     * @return mixed
-     */
-    public function getTopic(string $slug)
-    {
-        $pkg = Package::getByHandle('ortic_forum');
-        $em = $pkg->getEntityManager();
-        $topic = $em->getRepository('Concrete\Package\OrticForum\Src\Entity\ForumMessage')->findOneBy(['slug' => $slug]);
-        return $topic;
-    }
-
     /**
      * Returns a topic by id
      *
@@ -57,13 +45,13 @@ class Forum
     /**
      * Returns a list of messages that belong to the topic specified by $topic
      *
-     * @param ForumMessage $topic
+     * @param Page $topicPage
      * @return array
      */
-    public function getMessages(ForumMessage $topic)
+    public function getMessages(Page $topicPage)
     {
         $messageList = new ForumMessageList();
-        $messageList->filterByParent($topic->getID());
+        $messageList->filterByTopicId($topicPage->getCollectionID());
         $messageList->sortBy('dateCreated', 'asc');
         $messages = $messageList->getResults();
 
@@ -73,10 +61,10 @@ class Forum
     /**
      * Adds a new answer for the current user to the topic specified by $topic.
      *
-     * @param ForumMessage $topic
+     * @param Page $topicPage
      * @param string $message
      */
-    public function writeAnswer(ForumMessage $topic, string $message)
+    public function writeAnswer(Page $topicPage, string $message)
     {
         $pkg = Package::getByHandle('ortic_forum');
         $em = $pkg->getEntityManager();
@@ -90,7 +78,7 @@ class Forum
         $forumMessage->setDateUpdated(new \DateTime);
         $forumMessage->setUser($user->getUserInfoObject()->getEntityObject());
         $forumMessage->setPageId($page->getCollectionId());
-        $forumMessage->setParentId($topic->getID());
+        $forumMessage->setParentId($topicPage->getCollectionID());
 
         $em->persist($forumMessage);
         $em->flush();
@@ -116,6 +104,23 @@ class Forum
     }
 
     /**
+     * Truncates a given string at a specified length
+     *
+     * @param $value
+     * @param int $limit
+     * @param string $end
+     * @return string
+     */
+    public function limitString($value, $limit = 150, $end = '...')
+    {
+        if (mb_strwidth($value, 'UTF-8') <= $limit) {
+            return $value;
+        }
+
+        return rtrim(mb_strimwidth($value, 0, $limit, '', 'UTF-8')).$end;
+    }
+
+    /**
      * Adds a new topic to the current forum (page)
      *
      * @param string $subject
@@ -124,21 +129,31 @@ class Forum
     public function writeTopic(string $subject, string $message)
     {
         $pkg = Package::getByHandle('ortic_forum');
-        $txt = Core::make('helper/text');
+
+        // create new sub page
+        $currentPage = Page::getCurrentPage();
+
+        $pageType = PageType::getByHandle('forum_topic');
+        $template = PageTemplate::getByHandle('forum_topic');
+
+        $topicPage = $currentPage->add($pageType, array(
+            'cName' => $subject,
+            'cDescription' => $this->limitString($message),
+        ), $template);
+
 
         $em = $pkg->getEntityManager();
 
         $user = new User();
-        $page = Page::getCurrentPage();
 
+        // add forum message
         $object = new ForumMessage();
         $object->setSubject($subject);
-        $object->setSlug($txt->urlify($subject)); // @TODO ensure this is unique
         $object->setMessage($message);
         $object->setDateCreated(new \DateTime);
         $object->setDateUpdated(new \DateTime);
         $object->setUser($user->getUserInfoObject()->getEntityObject());
-        $object->setPageId($page->getCollectionId());
+        $object->setPageId($topicPage->getCollectionId());
 
         $em->persist($object);
         $em->flush();
@@ -147,16 +162,15 @@ class Forum
     /**
      * Returns a list of all topics part of the current forum (page)
      *
-     * @return ForumMessageList
+     * @return PageList
      */
     public function getTopics()
     {
         $page = Page::getCurrentPage();
 
-        $topicList = new ForumMessageList();
-        $topicList->filterByTopics();
-        $topicList->filterByForumId($page->getCollectionId());
-        $topicList->sortBy('dateCreated', 'desc');
+        $topicList = new PageList();
+        $topicList->filterByParentID($page->getCollectionId());
+        $topicList->sortByDateModifiedDescending();
 
         return $topicList;
     }
