@@ -35,16 +35,6 @@ class ForumMessage
     protected $parentId;
 
     /**
-     * @Column(type="string", nullable=true)
-     */
-    protected $subject;
-
-    /**
-     * @Column(type="string", nullable=true)
-     */
-    protected $slug;
-
-    /**
      * @Column(type="text")
      */
     protected $message;
@@ -134,42 +124,6 @@ class ForumMessage
     /**
      * @return mixed
      */
-    public function getSubject()
-    {
-        return $this->subject;
-    }
-
-    /**
-     * @param mixed $subject
-     * @return ForumMessage
-     */
-    public function setSubject($subject)
-    {
-        $this->subject = $subject;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSlug()
-    {
-        return $this->slug;
-    }
-
-    /**
-     * @param mixed $slug
-     * @return ForumMessage
-     */
-    public function setSlug($slug)
-    {
-        $this->slug = $slug;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getMessage()
     {
         return $this->message;
@@ -246,6 +200,12 @@ class ForumMessage
     {
         $forum = Core::make('ortic/forum');
         return $forum->getLink($this);
+    }
+
+    public function canEdit()
+    {
+        $forum = Core::make('ortic/forum');
+        return $forum->canEditMessage($this);
     }
 
 }

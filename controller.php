@@ -2,6 +2,7 @@
 
 namespace Concrete\Package\OrticForum;
 
+use Concrete\Core\Application\Application;
 use Concrete\Core\Backup\ContentImporter;
 use Concrete\Package\OrticForum\Src\Repository\Forum;
 use Package;
@@ -45,8 +46,13 @@ class Controller extends Package
 
     protected function registerRepositories()
     {
-        Core::bind('ortic/forum', function () {
+        $this->app->bind('ortic/forum', function () {
             return new Forum();
+        });
+
+        $this->app->singleton('ortic/forum/config', function (Application $app) {
+            $pkg = Package::getByHandle('ortic_forum');
+            return $pkg->getFileConfig();
         });
     }
 

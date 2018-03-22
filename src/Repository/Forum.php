@@ -3,9 +3,11 @@
 namespace Concrete\Package\OrticForum\Src\Repository;
 
 use Concrete\Core\Page\PageList;
+use Concrete\Core\User\Group\Group;
 use Concrete\Package\OrticForum\Src\Entity\ForumMessage;
 use Concrete\Package\OrticForum\Src\ForumMessageList;
 use Package;
+use Core;
 use Page;
 use User;
 use PageType;
@@ -78,7 +80,6 @@ class Forum
         $forumMessage->setDateUpdated(new \DateTime);
         $forumMessage->setUser($user->getUserInfoObject()->getEntityObject());
         $forumMessage->setPageId($page->getCollectionId());
-        $forumMessage->setParentId($topicPage->getCollectionID());
 
         $em->persist($forumMessage);
         $em->flush();
@@ -104,6 +105,21 @@ class Forum
     }
 
     /**
+     * Deletes an existing message
+     * 
+     * @param ForumMessage $message
+     */
+    public function deleteMessage(ForumMessage $message)
+    {
+        $pkg = Package::getByHandle('ortic_forum');
+
+        $em = $pkg->getEntityManager();
+
+        $em->remove($message);
+        $em->flush();
+    }
+
+    /**
      * Truncates a given string at a specified length
      *
      * @param $value
@@ -117,7 +133,7 @@ class Forum
             return $value;
         }
 
-        return rtrim(mb_strimwidth($value, 0, $limit, '', 'UTF-8')).$end;
+        return rtrim(mb_strimwidth($value, 0, $limit, '', 'UTF-8')) . $end;
     }
 
     /**
@@ -148,7 +164,6 @@ class Forum
 
         // add forum message
         $object = new ForumMessage();
-        $object->setSubject($subject);
         $object->setMessage($message);
         $object->setDateCreated(new \DateTime);
         $object->setDateUpdated(new \DateTime);
@@ -173,6 +188,30 @@ class Forum
         $topicList->sortByDateModifiedDescending();
 
         return $topicList;
+    }
+
+    /**
+     * Returns true if one of these conditions is true:
+     * - message is owned by current user
+     * - current user is in admin group defined in config/ortic_forum.php
+     * - current user is super admin
+     *
+     * @param ForumMessage $message
+     * @return bool
+     */
+    public function canEditMessage(ForumMessage $message)
+    {
+        $user = new User();
+
+        $userIsOwner = $user->getUserId() == $message->user->getUserId();
+
+        $config = Core::make('ortic/forum/config');
+        $adminGroupName = $config->get('ortic_forum.admin_group');
+        $adminGroup = Group::getByName($adminGroupName);
+
+        $userInAdminGroup = $user->inGroup($adminGroup);
+
+        return $userIsOwner || $userInAdminGroup || $user->isSuperUser();
     }
 
     /**

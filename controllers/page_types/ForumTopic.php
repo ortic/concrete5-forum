@@ -53,9 +53,8 @@ class ForumTopic extends PageTypeController
     {
         $forum = Core::make('ortic/forum');
         $message = $forum->getMessage($messageId);
-        $user = new User();
 
-        if ($user->getUserId() != $message->user->getUserId()) {
+        if (!$forum->canEditMessage($message)) {
             header("HTTP/1.0 403 Forbidden");
             $this->replace('/page_forbidden');
             return;
@@ -64,6 +63,29 @@ class ForumTopic extends PageTypeController
         $forum->updateMessage($message, $this->post('message'));
 
         $this->flash('message', t('Message updated'));
+        return Redirect::to($this->action(''));
+    }
+
+    /**
+     * Deletes an existing message
+     *
+     * @param int $messageId
+     * @return \Concrete\Core\Routing\RedirectResponse|void
+     */
+    public function deleteMessage(int $messageId)
+    {
+        $forum = Core::make('ortic/forum');
+        $message = $forum->getMessage($messageId);
+
+        if (!$forum->canEditMessage($message)) {
+            header("HTTP/1.0 403 Forbidden");
+            $this->replace('/page_forbidden');
+            return;
+        }
+
+        $forum->deleteMessage($message);
+
+        $this->flash('message', t('Message delete'));
         return Redirect::to($this->action(''));
     }
 
