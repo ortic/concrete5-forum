@@ -5,9 +5,10 @@
     </blocktypes>
     <pagetemplates>
         <pagetemplate icon="blank.png" name="Forum" handle="forum" package="ortic_forum" internal="0"/>
+        <pagetemplate icon="blank.png" name="Forum Topic" handle="forum_topic" package="ortic_forum" internal="1"/>
     </pagetemplates>
     <pagetypes>
-        <pagetype name="Forum" handle="Forum" package="ortic_forum" launch-in-composer="0">
+        <pagetype name="Forum" handle="forum" package="ortic_forum" launch-in-composer="0">
             <pagetemplates type="custom" default="forum">
                 <pagetemplate handle="forum"/>
             </pagetemplates>
@@ -25,6 +26,28 @@
                 <output>
                     <pagetemplate handle="forum">
                         <page name="" path="" filename="" pagetype="Forum" template="forum" user="admin" description="" package="ortic_forum" root="true"/>
+                    </pagetemplate>
+                </output>
+            </composer>
+        </pagetype>
+        <pagetype name="Forum Topic" handle="forum_topic" package="ortic_forum" launch-in-composer="0" internal="1">
+            <pagetemplates type="custom" default="forum_topic">
+                <pagetemplate handle="forum_topic"/>
+            </pagetemplates>
+            <target handle="all" package="" form-factor=""/>
+            <composer>
+                <formlayout>
+                    <set name="Basics" description="">
+                        <control custom-template="" required="1" custom-label="Page Name" description="" type="core_page_property" handle="name"/>
+                        <control custom-template="" custom-label="" description="" type="core_page_property" handle="description"/>
+                        <control custom-template="" custom-label="" description="" type="core_page_property" handle="url_slug"/>
+                        <control custom-template="" custom-label="" description="" type="core_page_property" handle="page_template"/>
+                        <control custom-template="" custom-label="" description="" type="core_page_property" handle="publish_target"/>
+                    </set>
+                </formlayout>
+                <output>
+                    <pagetemplate handle="forum">
+                        <page name="" path="" filename="" pagetype="Forum Topic" template="forum_topic" user="admin" description="" package="ortic_forum" root="true"/>
                     </pagetemplate>
                 </output>
             </composer>

@@ -16,18 +16,18 @@ $date = Core::make('date');
         ?>
         <tr>
             <td>
-                <a href="<?= $this->action($topic->getSlug()) ?>">
-                    <?= $topic->getSubject() ?>
+                <a href="<?= $topic->getCollectionLink() ?>">
+                    <?= $topic->getCollectionName() ?>
                 </a>
             </td>
             <td>
-                <?php View::element('user_link', ['user' => $topic->user], 'ortic_forum') ?>
+                <?php View::element('user_link', ['user' => UserInfo::getByID($topic->getVersionObject()->getVersionAuthorUserID())], 'ortic_forum') ?>
             </td>
             <td>
-                <?= $date->formatDateTime($topic->getDateCreated()) ?>
+                <?= $date->formatDateTime($topic->getCollectionDateLastModified()) ?>
             </td>
             <td class="text-right">
-                <a href="<?= $this->action($topic->getSlug()) ?>" class="btn btn-xs btn-primary">
+                <a href="<?= $topic->getCollectionLink() ?>" class="btn btn-xs btn-primary">
                     <?= t('Show Topic') ?>
                 </a>
             </td>
@@ -41,7 +41,7 @@ $date = Core::make('date');
 
 <hr>
 
-<form method="POST" action="<?= $this->action('_new') ?>">
+<form method="POST" action="<?= $this->action('writeTopic') ?>">
     <div class="form-group">
         <label for="subject"><?= t('Subject') ?></label>
         <input type="text" class="form-control" name="subject" id="subject" placeholder="">

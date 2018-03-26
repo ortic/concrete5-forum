@@ -1,9 +1,8 @@
-<h1><?= $topic->getSubject() ?></h1>
+<h1><?= $currentPage->getCollectionName() ?></h1>
 
 <?php foreach ($messages as $message) {
-    $userIsOwner = ($user->getUserId() == $message->user->getUserId());
     ?>
-    <div class="ortic-forum-message row thumbnail" id="message-<?=$message->getID()?>">
+    <div class="ortic-forum-message row thumbnail" id="message-<?= $message->getID() ?>">
 
         <div class="col-xs-1">
             <?php View::element('user_avatar', ['user' => $message->user], 'ortic_forum') ?>
@@ -11,13 +10,18 @@
         <div class="col-xs-11">
             <div>
                 <strong><?php View::element('user_link', ['user' => $message->user], 'ortic_forum') ?></strong>
-                <?= Core::make('helper/date')->formatDateTime($topic->getDateCreated()) ?>
-                | <?php if ($userIsOwner) { ?>
-                    <a class="ortic-forum-edit">
+                <?= Core::make('helper/date')->formatDateTime($currentPage->getCollectionDateLastModified()) ?>
+                <?php if ($message->canEdit()) { ?>
+                    |
+                    <a class="ortic-forum-edit" href="#">
                         <?= t('Edit') ?>
                     </a>
-                    <a class="ortic-forum-edit-cancel" style="display: none;">
+                    <a class="ortic-forum-edit-cancel" style="display: none;" href="#">
                         <?= t('Cancel') ?>
+                    </a>
+                    |
+                    <a class="ortic-forum-delete" href="<?= $this->action('deleteMessage', [$message->getID()])?>">
+                        <?= t('Delete') ?>
                     </a>
                 <?php } ?>
             </div>
@@ -27,8 +31,7 @@
                 </p>
             </div>
             <div class="ortic-forum-message-edit" style="display: none;">
-                <form method="POST"
-                      action="<?= $this->action($topic->getSlug() . '/' . $message->getID() . '/_edit') ?>">
+                <form method="POST" action="<?= $this->action('updateMessage', [$message->getID()]) ?>">
                     <textarea type="text" class="form-control" name="message" id="message"
                               placeholder=""><?= $message->getMessage() ?></textarea>
                     <button class="btn btn-primary"><?= t('Save') ?></button>
@@ -41,7 +44,7 @@
 
 <hr>
 
-<form method="POST" action="<?= $this->action($topic->getSlug() . '/_answer') ?>">
+<form method="POST" action="<?= $this->action('writeAnswer') ?>">
     <div class="form-group">
         <label for="message"><?= t('Message') ?></label>
         <textarea type="text" class="form-control" name="message" id="message" placeholder=""></textarea>

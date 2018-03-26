@@ -31,11 +31,11 @@ class ForumMessageList extends DatabaseItemList
     }
 
     /**
-     * Filter by forum (page) ID
+     * Filter by forum topic (page) ID
      *
      * @param $forumId
      */
-    public function filterByForumId($forumId)
+    public function filterByTopicId($forumId)
     {
         $this->query->andWhere('m.cID = :cID')->setParameter('cID', $forumId);
     }
