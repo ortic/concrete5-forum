@@ -1,3 +1,17 @@
+<?php
+
+$token = Loader::helper('validation/token');
+
+?>
+
+<?php if($success): ?>
+    <div class="alert alert-success"><?= $success ?></div>
+<?php endif; ?>
+
+<?php if($error): ?>
+    <div class="alert alert-error"><?= $error ?></div>
+<?php endif; ?>
+
 <h1><?= $currentPage->getCollectionName() ?></h1>
 
 <?php foreach ($messages as $message) {
@@ -20,7 +34,7 @@
                         <?= t('Cancel') ?>
                     </a>
                     |
-                    <a class="ortic-forum-delete" href="<?= $this->action('deleteMessage', [$message->getID()])?>">
+                    <a class="ortic-forum-delete" href="<?= $this->action('deleteMessage', [$message->getID(), $token->generate('deleteMessage')]) ?>">
                         <?= t('Delete') ?>
                     </a>
                 <?php } ?>
@@ -32,6 +46,8 @@
             </div>
             <div class="ortic-forum-message-edit" style="display: none;">
                 <form method="POST" action="<?= $this->action('updateMessage', [$message->getID()]) ?>">
+                    <?php echo $token->output('updateMessage'); ?>
+
                     <textarea type="text" class="form-control" name="message" id="message"
                               placeholder=""><?= $message->getMessage() ?></textarea>
                     <button class="btn btn-primary"><?= t('Save') ?></button>
@@ -44,7 +60,15 @@
 
 <hr>
 
+<h3><?= t('Add reply') ?></h3>
+
 <form method="POST" action="<?= $this->action('writeAnswer') ?>">
+    <?php if($error_writeAnswer): ?>
+        <div class="alert alert-error"><?= $error_writeAnswer ?></div>
+    <?php endif; ?>
+
+    <?php echo $token->output('writeAnswer'); ?>
+
     <div class="form-group">
         <label for="message"><?= t('Message') ?></label>
         <textarea type="text" class="form-control" name="message" id="message" placeholder=""></textarea>

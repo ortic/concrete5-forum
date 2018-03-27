@@ -34,12 +34,24 @@ class ForumTopic extends PageTypeController
      */
     public function writeAnswer()
     {
-        $currentPage = Page::getCurrentPage();
+        $token = Core::make('token');
 
-        $forum = Core::make('ortic/forum');
-        $forum->writeAnswer($currentPage, $this->post('message'));
+        if($this->isPost()) {
+            if($token->validate("writeAnswer")) {
+                $currentPage = Page::getCurrentPage();
 
-        $this->flash('message', t('Message added'));
+                $forum = Core::make('ortic/forum');
+                $forum->writeAnswer($currentPage, $this->post('message'));
+
+                $this->flash('success', t('Message added'));
+                return Redirect::to($this->action(''));
+
+            } else {
+                $this->flash('error_writeAnswer', $token->getErrorMessage());
+                return Redirect::to($this->action(''));
+            }
+        }
+
         return Redirect::to($this->action(''));
     }
 
@@ -51,18 +63,30 @@ class ForumTopic extends PageTypeController
      */
     public function updateMessage(int $messageId)
     {
-        $forum = Core::make('ortic/forum');
-        $message = $forum->getMessage($messageId);
+        $token = Core::make('token');
 
-        if (!$forum->canEditMessage($message)) {
-            header("HTTP/1.0 403 Forbidden");
-            $this->replace('/page_forbidden');
-            return;
+        if($this->isPost()) {
+            if($token->validate("updateMessage")) {
+                $forum = Core::make('ortic/forum');
+                $message = $forum->getMessage($messageId);
+
+                if (!$forum->canEditMessage($message)) {
+                    header("HTTP/1.0 403 Forbidden");
+                    $this->replace('/page_forbidden');
+                    return;
+                }
+
+                $forum->updateMessage($message, $this->post('message'));
+
+                $this->flash('success', t('Message updated.'));
+                return Redirect::to($this->action(''));
+
+            } else {
+                $this->flash('error', $token->getErrorMessage());
+                return Redirect::to($this->action(''));
+            }
         }
 
-        $forum->updateMessage($message, $this->post('message'));
-
-        $this->flash('message', t('Message updated'));
         return Redirect::to($this->action(''));
     }
 
@@ -70,22 +94,33 @@ class ForumTopic extends PageTypeController
      * Deletes an existing message
      *
      * @param int $messageId
+     * @param string $tokenId
      * @return \Concrete\Core\Routing\RedirectResponse|void
      */
-    public function deleteMessage(int $messageId)
+    public function deleteMessage(int $messageId, $tokenId)
     {
-        $forum = Core::make('ortic/forum');
-        $message = $forum->getMessage($messageId);
+        $token = Core::make('token');
 
-        if (!$forum->canEditMessage($message)) {
-            header("HTTP/1.0 403 Forbidden");
-            $this->replace('/page_forbidden');
-            return;
+        if($token->validate("deleteMessage", $tokenId)) {
+            $forum = Core::make('ortic/forum');
+            $message = $forum->getMessage($messageId);
+
+            if (!$forum->canEditMessage($message)) {
+                header("HTTP/1.0 403 Forbidden");
+                $this->replace('/page_forbidden');
+                return;
+            }
+
+            $forum->deleteMessage($message);
+
+            $this->flash('success', t('Message deleted.'));
+            return Redirect::to($this->action(''));
+
+        } else {
+            $this->flash('error', $token->getErrorMessage());
+            return Redirect::to($this->action(''));
         }
 
-        $forum->deleteMessage($message);
-
-        $this->flash('message', t('Message delete'));
         return Redirect::to($this->action(''));
     }
 

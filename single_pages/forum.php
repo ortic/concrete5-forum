@@ -1,6 +1,13 @@
 <?php
+
 $date = Core::make('date');
+$token = Core::make('token');
+
 ?>
+
+<?php if($success): ?>
+    <div class="alert alert-success"><?= $success ?></div>
+<?php endif; ?>
 
 <table class="table">
     <thead>
@@ -41,7 +48,15 @@ $date = Core::make('date');
 
 <hr>
 
+<h3><?= t('Create new topic') ?></h3>
+
 <form method="POST" action="<?= $this->action('writeTopic') ?>">
+    <?php if($error_writeTopic): ?>
+        <div class="alert alert-error"><?= $error_writeTopic ?></div>
+    <?php endif; ?>
+
+    <?php echo $token->output('writeTopic'); ?>
+
     <div class="form-group">
         <label for="subject"><?= t('Subject') ?></label>
         <input type="text" class="form-control" name="subject" id="subject" placeholder="">
