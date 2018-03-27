@@ -106,7 +106,7 @@ class Forum
 
     /**
      * Deletes an existing message
-     * 
+     *
      * @param ForumMessage $message
      */
     public function deleteMessage(ForumMessage $message)
