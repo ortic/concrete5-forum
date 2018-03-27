@@ -8,7 +8,7 @@ $token = Core::make('token');
 <?php } ?>
 
 <?php if ($forumError) { ?>
-    <div class="alert alert-error"><?= $forumError ?></div>
+    <div class="alert alert-danger"><?= $forumError ?></div>
 <?php } ?>
 
 <table class="table">
