@@ -141,6 +141,7 @@ class Forum
      *
      * @param string $subject
      * @param string $message
+     * @return \Concrete\Core\Page\Page
      */
     public function writeTopic(string $subject, string $message)
     {
@@ -172,6 +173,8 @@ class Forum
 
         $em->persist($object);
         $em->flush();
+
+        return $topicPage;
     }
 
     /**

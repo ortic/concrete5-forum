@@ -36,13 +36,13 @@ class Forum extends PageTypeController
         if ($this->getRequest()->isPost()) {
             if ($token->validate('writeTopic')) {
                 $forum = Core::make('ortic/forum');
-                $forum->writeTopic($this->post('subject'), $this->post('message'));
+                $topicPage = $forum->writeTopic($this->post('subject'), $this->post('message'));
 
-                $this->flash('success', t('Topic added'));
-                return Redirect::to($this->action(''));
+                $this->flash('forumSuccess', t('Topic added'));
+                return Redirect::to($topicPage->getCollectionLink());
 
             } else {
-                $this->flash('error_writeTopic', $token->getErrorMessage());
+                $this->flash('forumError', $token->getErrorMessage());
                 return Redirect::to($this->action(''));
             }
         }

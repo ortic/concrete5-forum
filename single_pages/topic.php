@@ -1,16 +1,14 @@
 <?php
-
-$token = Loader::helper('validation/token');
-
+$token = Core::make('token');
 ?>
 
-<?php if($success): ?>
-    <div class="alert alert-success"><?= $success ?></div>
-<?php endif; ?>
+<?php if ($forumSuccess) { ?>
+    <div class="alert alert-success"><?= $forumSuccess ?></div>
+<?php } ?>
 
-<?php if($error): ?>
-    <div class="alert alert-error"><?= $error ?></div>
-<?php endif; ?>
+<?php if ($forumError) { ?>
+    <div class="alert alert-error"><?= $forumError ?></div>
+<?php } ?>
 
 <h1><?= $currentPage->getCollectionName() ?></h1>
 
@@ -63,11 +61,7 @@ $token = Loader::helper('validation/token');
 <h3><?= t('Add reply') ?></h3>
 
 <form method="POST" action="<?= $this->action('writeAnswer') ?>">
-    <?php if($error_writeAnswer): ?>
-        <div class="alert alert-error"><?= $error_writeAnswer ?></div>
-    <?php endif; ?>
-
-    <?php echo $token->output('writeAnswer'); ?>
+    <?= $token->output('writeAnswer') ?>
 
     <div class="form-group">
         <label for="message"><?= t('Message') ?></label>

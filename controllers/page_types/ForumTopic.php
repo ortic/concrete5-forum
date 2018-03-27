@@ -43,11 +43,11 @@ class ForumTopic extends PageTypeController
                 $forum = Core::make('ortic/forum');
                 $forum->writeAnswer($currentPage, $this->post('message'));
 
-                $this->flash('success', t('Message added'));
+                $this->flash('forumSuccess', t('Message added'));
                 return Redirect::to($this->action(''));
 
             } else {
-                $this->flash('error_writeAnswer', $token->getErrorMessage());
+                $this->flash('forumError', $token->getErrorMessage());
                 return Redirect::to($this->action(''));
             }
         }
@@ -78,11 +78,11 @@ class ForumTopic extends PageTypeController
 
                 $forum->updateMessage($message, $this->post('message'));
 
-                $this->flash('success', t('Message updated.'));
+                $this->flash('forumSuccess', t('Message updated.'));
                 return Redirect::to($this->action(''));
 
             } else {
-                $this->flash('error', $token->getErrorMessage());
+                $this->flash('forumError', $token->getErrorMessage());
                 return Redirect::to($this->action(''));
             }
         }
@@ -113,11 +113,11 @@ class ForumTopic extends PageTypeController
 
             $forum->deleteMessage($message);
 
-            $this->flash('success', t('Message deleted.'));
+            $this->flash('forumSuccess', t('Message deleted.'));
             return Redirect::to($this->action(''));
 
         } else {
-            $this->flash('error', $token->getErrorMessage());
+            $this->flash('forumError', $token->getErrorMessage());
             return Redirect::to($this->action(''));
         }
 
