@@ -4,12 +4,14 @@ namespace Concrete\Package\OrticForum\Controller\PageType;
 
 use Concrete\Core\Page\Controller\PageTypeController;
 use Concrete\Core\Routing\Redirect;
+use Concrete\Package\OrticForum\Src\AuthenticationTrait;
 use Core;
 use Page;
 use User;
 
 class ForumTopic extends PageTypeController
 {
+    use AuthenticationTrait;
 
     public function view()
     {

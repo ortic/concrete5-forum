@@ -52,16 +52,23 @@ $token = Core::make('token');
 
 <h3><?= t('Create new topic') ?></h3>
 
-<form method="POST" action="<?= $this->action('writeTopic') ?>">
-    <?= $token->output('writeTopic') ?>
+<?php if (User::isLoggedIn()) { ?>
+    <form method="POST" action="<?= $this->action('writeTopic') ?>">
+        <?= $token->output('writeTopic') ?>
 
-    <div class="form-group">
-        <label for="subject"><?= t('Subject') ?></label>
-        <input type="text" class="form-control" name="subject" id="subject" placeholder="">
+        <div class="form-group">
+            <label for="subject"><?= t('Subject') ?></label>
+            <input type="text" class="form-control" name="subject" id="subject" placeholder="">
+        </div>
+        <div class="form-group">
+            <label for="message"><?= t('Message') ?></label>
+            <textarea type="text" class="form-control" name="message" id="message" placeholder=""></textarea>
+        </div>
+        <button class="btn btn-primary"><?= t('Post Message') ?></button>
+    </form>
+<?php } else { ?>
+    <div class="alert alert-info">
+        <?= t('Please <a href="%s">sign in</a> or <a href="%s">register</a> to write a new topic.', $this->action('login'), $this->action('register'))?>
     </div>
-    <div class="form-group">
-        <label for="message"><?= t('Message') ?></label>
-        <textarea type="text" class="form-control" name="message" id="message" placeholder=""></textarea>
-    </div>
-    <button class="btn btn-primary"><?= t('Post Message') ?></button>
-</form>
+<?php } ?>
+

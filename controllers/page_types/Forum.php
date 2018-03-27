@@ -4,11 +4,14 @@ namespace Concrete\Package\OrticForum\Controller\PageType;
 
 use Concrete\Core\Page\Controller\PageTypeController;
 use Concrete\Core\Routing\Redirect;
+use Concrete\Package\OrticForum\Src\AuthenticationTrait;
 use Core;
 use User;
 
 class Forum extends PageTypeController
 {
+    use AuthenticationTrait;
+
     /**
      * View the topic listing.
      */
@@ -22,6 +25,7 @@ class Forum extends PageTypeController
 
         $this->set('topics', $topics);
         $this->set('pagination', $pagination);
+        $this->set('user', new User());
 
         $this->render('forum', 'ortic_forum');
     }
@@ -49,4 +53,5 @@ class Forum extends PageTypeController
 
         return Redirect::to($this->action(''));
     }
+
 }
