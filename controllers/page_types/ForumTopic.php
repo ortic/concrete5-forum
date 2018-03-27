@@ -36,8 +36,8 @@ class ForumTopic extends PageTypeController
     {
         $token = Core::make('token');
 
-        if($this->isPost()) {
-            if($token->validate("writeAnswer")) {
+        if ($this->isPost()) {
+            if ($token->validate('writeAnswer')) {
                 $currentPage = Page::getCurrentPage();
 
                 $forum = Core::make('ortic/forum');
@@ -65,8 +65,8 @@ class ForumTopic extends PageTypeController
     {
         $token = Core::make('token');
 
-        if($this->isPost()) {
-            if($token->validate("updateMessage")) {
+        if ($this->isPost()) {
+            if ($token->validate('updateMessage')) {
                 $forum = Core::make('ortic/forum');
                 $message = $forum->getMessage($messageId);
 
@@ -101,7 +101,7 @@ class ForumTopic extends PageTypeController
     {
         $token = Core::make('token');
 
-        if($token->validate("deleteMessage", $tokenId)) {
+        if ($token->validate('deleteMessage', $tokenId)) {
             $forum = Core::make('ortic/forum');
             $message = $forum->getMessage($messageId);
 

@@ -33,8 +33,8 @@ class Forum extends PageTypeController
     {
         $token = Core::make('token');
 
-        if($this->isPost()) {
-            if($token->validate("writeTopic")) {
+        if ($this->isPost()) {
+            if ($token->validate('writeTopic')) {
                 $forum = Core::make('ortic/forum');
                 $forum->writeTopic($this->post('subject'), $this->post('message'));
 
