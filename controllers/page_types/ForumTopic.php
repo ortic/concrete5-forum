@@ -36,7 +36,7 @@ class ForumTopic extends PageTypeController
     {
         $token = Core::make('token');
 
-        if ($this->isPost()) {
+        if ($this->getRequest()->isPost()) {
             if ($token->validate('writeAnswer')) {
                 $currentPage = Page::getCurrentPage();
 
@@ -65,7 +65,7 @@ class ForumTopic extends PageTypeController
     {
         $token = Core::make('token');
 
-        if ($this->isPost()) {
+        if ($this->getRequest()->isPost()) {
             if ($token->validate('updateMessage')) {
                 $forum = Core::make('ortic/forum');
                 $message = $forum->getMessage($messageId);
