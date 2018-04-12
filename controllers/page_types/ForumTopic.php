@@ -13,6 +13,20 @@ class ForumTopic extends PageTypeController
 {
     use AuthenticationTrait;
 
+    /**
+     * The ErrorList instance (available after the on_start method has been called).
+     *
+     * @var \Concrete\Core\Error\ErrorList\ErrorList|null
+     */
+    private $error;
+
+    public function __construct(Page $c)
+    {
+        parent::__construct($c);
+
+        $this->error = Core::make('error');
+    }
+
     public function view()
     {
         $this->requireAsset('ortic/forum');
@@ -39,7 +53,15 @@ class ForumTopic extends PageTypeController
         $token = Core::make('token');
 
         if ($this->getRequest()->isPost()) {
-            if ($token->validate('writeAnswer')) {
+            if (!$token->validate('writeAnswer')) {
+                $this->error->add($token->getErrorMessage());
+            }
+
+            if (!$this->get('message')) {
+                $this->error->add(t('You must enter a message'));
+            }
+
+            if (!$this->error->has()) {
                 $currentPage = Page::getCurrentPage();
 
                 $forum = Core::make('ortic/forum');
@@ -49,7 +71,7 @@ class ForumTopic extends PageTypeController
                 return Redirect::to($this->action(''));
 
             } else {
-                $this->flash('forumError', $token->getErrorMessage());
+                $this->flash('forumError', $this->error);
                 return Redirect::to($this->action(''));
             }
         }

@@ -1,6 +1,7 @@
 <?php
 $date = Core::make('date');
 $token = Core::make('token');
+$request = Request::getInstance();
 ?>
 
 <?php if ($forumSuccess) { ?>
@@ -58,11 +59,11 @@ $token = Core::make('token');
 
         <div class="form-group">
             <label for="subject"><?= t('Subject') ?></label>
-            <input type="text" class="form-control" name="subject" id="subject" placeholder="">
+            <input type="text" class="form-control" name="subject" id="subject" placeholder="" value="<?=h($forumTopicSubject)?>">
         </div>
         <div class="form-group">
             <label for="message"><?= t('Message') ?></label>
-            <textarea type="text" class="form-control" name="message" id="message" placeholder=""></textarea>
+            <textarea type="text" class="form-control" name="message" id="message" placeholder=""><?=h($forumTopicMessage)?></textarea>
         </div>
         <button class="btn btn-primary"><?= t('Post Message') ?></button>
     </form>
