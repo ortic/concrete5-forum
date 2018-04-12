@@ -1,5 +1,9 @@
 <?php
 if (!$user) {
+    ?>
+    <img src="<?= Core::make('config')->get('concrete.icons.user_avatar.default') ?>" alt="<?= h(t('Deleted User')) ?>"
+         class="u-avatar">
+    <?php
     return;
 }
 if ($user instanceof \Concrete\Core\Entity\User\User) {
