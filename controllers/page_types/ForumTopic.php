@@ -138,7 +138,18 @@ class ForumTopic extends PageTypeController
             $forum->deleteMessage($message);
 
             $this->flash('forumSuccess', t('Message deleted.'));
-            return Redirect::to($this->action(''));
+
+            // check if we have deleted the last message, the topic, if we did, we remove the page as well
+            $currentPage = Page::getCurrentPage();
+            $messages = $forum->getMessages($currentPage);
+            if (empty($messages)) {
+                $currentPage->delete();
+
+                return Redirect::to($this->action('..'));
+            }
+            else {
+                return Redirect::to($this->action(''));
+            }
 
         } else {
             $this->flash('forumError', $token->getErrorMessage());
