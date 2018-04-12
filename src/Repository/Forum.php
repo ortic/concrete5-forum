@@ -206,11 +206,7 @@ class Forum
     {
         $user = new User();
 
-        if (!$user || !$message->user) {
-            return false;
-        }
-
-        $userIsOwner = $user->getUserId() == $message->user->getUserId();
+        $userIsOwner = $user && $message->user && $user->getUserId() == $message->user->getUserId();
 
         $config = Core::make('ortic/forum/config');
         $adminGroupName = $config->get('ortic_forum.admin_group');
