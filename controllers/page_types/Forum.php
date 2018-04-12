@@ -7,6 +7,7 @@ use Concrete\Core\Routing\Redirect;
 use Concrete\Package\OrticForum\Src\AuthenticationTrait;
 use Core;
 use User;
+use Page;
 
 class Forum extends PageTypeController
 {
