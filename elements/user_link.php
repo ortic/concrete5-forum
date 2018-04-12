@@ -1,7 +1,9 @@
 <?php
 if (!$user) {
+    echo t('Deleted User');
     return;
 }
+
 if ($user instanceof \Concrete\Core\Entity\User\User) {
     $user = $user->getUserInfoObject();
 }
