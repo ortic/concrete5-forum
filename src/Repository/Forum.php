@@ -6,6 +6,7 @@ use Concrete\Core\Page\PageList;
 use Concrete\Core\User\Group\Group;
 use Concrete\Package\OrticForum\Src\Entity\ForumMessage;
 use Concrete\Package\OrticForum\Src\ForumMessageList;
+use Concrete\Package\OrticForum\Src\ForumTopicList;
 use Package;
 use Core;
 use Page;
@@ -63,10 +64,9 @@ class Forum
     /**
      * Adds a new answer for the current user to the topic specified by $topic.
      *
-     * @param Page $topicPage
      * @param string $message
      */
-    public function writeAnswer(Page $topicPage, string $message)
+    public function writeAnswer(string $message)
     {
         $pkg = Package::getByHandle('ortic_forum');
         $em = $pkg->getEntityManager();
@@ -80,8 +80,45 @@ class Forum
         $forumMessage->setDateUpdated(new \DateTime);
         $forumMessage->setUser($user->getUserInfoObject()->getEntityObject());
         $forumMessage->setPageId($page->getCollectionId());
+        $forumMessage->setFirstMessage(0);
+        $forumMessage->setLastMessage(1);
 
         $em->persist($forumMessage);
+        $em->flush();
+
+        $this->updateLastMessage();
+    }
+
+    protected function updateLastMessage()
+    {
+        $pkg = Package::getByHandle('ortic_forum');
+        $em = $pkg->getEntityManager();
+
+        $topicPage = Page::getCurrentPage();
+
+        $messageList = new ForumMessageList();
+
+        $messageList->filterByTopicId($topicPage->getCollectionID());
+        $messageList->sortBy('mID', 'asc');
+
+        $messages = $messageList->get();
+
+        // clear last message flag for all messages
+        foreach ($messages as $message) {
+            if ($message->getLastMessage()) {
+                $message->setLastMessage(0);
+
+                $em->persist($message);
+            }
+        }
+
+        // make sure last message is actually marked as last message
+        if (!$message->getLastMessage()) {
+            $message->setLastMessage(1);
+
+            $em->persist($message);
+        }
+
         $em->flush();
     }
 
@@ -117,6 +154,8 @@ class Forum
 
         $em->remove($message);
         $em->flush();
+
+        $this->updateLastMessage();
     }
 
     /**
@@ -170,6 +209,8 @@ class Forum
         $object->setDateUpdated(new \DateTime);
         $object->setUser($user->getUserInfoObject()->getEntityObject());
         $object->setPageId($topicPage->getCollectionId());
+        $object->setLastMessage(1);
+        $object->setFirstMessage(1);
 
         $em->persist($object);
         $em->flush();
@@ -186,9 +227,9 @@ class Forum
     {
         $page = Page::getCurrentPage();
 
-        $topicList = new PageList();
+        $topicList = new ForumTopicList();
         $topicList->filterByParentID($page->getCollectionId());
-        $topicList->sortByDateModifiedDescending();
+        $topicList->sortByLastActivityDate('desc');
 
         return $topicList;
     }
@@ -228,11 +269,6 @@ class Forum
         $page = Page::getByID($message->getPageId());
         $pageLink = $page->getCollectionLink();
 
-        if ($message->getParentId()) {
-            $topic = $this->getTopicById($message->getParentId());
-            return $pageLink . '/' . $topic->getSlug() . '#message-' . $message->getId();
-        } else {
-            return $pageLink . '/' . $message->getSlug();
-        }
+        return $pageLink . '/' . $message->getSlug();
     }
 }

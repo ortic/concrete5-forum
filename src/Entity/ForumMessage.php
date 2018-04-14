@@ -30,14 +30,19 @@ class ForumMessage
     public $user;
 
     /**
-     * @Column(name="parentMessageID", nullable=true, type="integer", options={"unsigned"=true})
-     */
-    protected $parentId;
-
-    /**
      * @Column(type="text")
      */
     protected $message;
+
+    /**
+     * @Column(type="boolean")
+     */
+    protected $lastMessage;
+
+    /**
+     * @Column(type="boolean")
+     */
+    protected $firstMessage;
 
     /**
      * @Column(type="datetime")
@@ -64,6 +69,42 @@ class ForumMessage
     public function setID($ID)
     {
         $this->ID = $ID;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLastMessage()
+    {
+        return $this->lastMessage;
+    }
+
+    /**
+     * @param mixed $lastMessage
+     * @return ForumMessage
+     */
+    public function setLastMessage($lastMessage)
+    {
+        $this->lastMessage = $lastMessage;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFirstMessage()
+    {
+        return $this->firstMessage;
+    }
+
+    /**
+     * @param mixed $firstMessage
+     * @return ForumMessage
+     */
+    public function setFirstMessage($firstMessage)
+    {
+        $this->firstMessage = $firstMessage;
         return $this;
     }
 
@@ -100,24 +141,6 @@ class ForumMessage
     public function setUserId($userId)
     {
         $this->userId = $userId;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getParentId()
-    {
-        return $this->parentId;
-    }
-
-    /**
-     * @param mixed $parentId
-     * @return ForumMessage
-     */
-    public function setParentId($parentId)
-    {
-        $this->parentId = $parentId;
         return $this;
     }
 

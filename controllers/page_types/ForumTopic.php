@@ -62,10 +62,8 @@ class ForumTopic extends PageTypeController
             }
 
             if (!$this->error->has()) {
-                $currentPage = Page::getCurrentPage();
-
                 $forum = Core::make('ortic/forum');
-                $forum->writeAnswer($currentPage, $this->post('message'));
+                $forum->writeAnswer($this->post('message'));
 
                 $this->flash('forumSuccess', t('Message added'));
                 return Redirect::to($this->action(''));

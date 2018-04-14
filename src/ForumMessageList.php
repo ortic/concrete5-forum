@@ -31,6 +31,14 @@ class ForumMessageList extends DatabaseItemList
     }
 
     /**
+     * Returns onl the message where last message is set
+     */
+    public function filterByLastMessage()
+    {
+        $this->query->andWhere('m.lastMessage = 1');
+    }
+
+    /**
      * Filter by forum topic (page) ID
      *
      * @param $forumId

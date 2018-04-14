@@ -17,7 +17,8 @@ $request = Request::getInstance();
     <tr>
         <th><?= t('Subject') ?></th>
         <th><?= t('Author') ?></th>
-        <th><?= t('Date') ?></th>
+        <th><?= t('Created Date') ?></th>
+        <th><?= t('Last Activity Date') ?></th>
         <th></th>
     </tr>
     </thead>
@@ -35,6 +36,9 @@ $request = Request::getInstance();
             </td>
             <td>
                 <?= $date->formatDateTime($topic->getCollectionDateLastModified()) ?>
+            </td>
+            <td>
+                <?= $date->formatDateTime($topic->lastMessageCreated) ?>
             </td>
             <td class="text-right">
                 <a href="<?= $topic->getCollectionLink() ?>" class="btn btn-xs btn-primary">
