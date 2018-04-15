@@ -16,11 +16,11 @@ $token = Core::make('token');
     ?>
     <div class="ortic-forum-message row thumbnail" id="message-<?= $message->getID() ?>">
 
-        <div class="col-xs-1">
+        <div class="col-xs-2 col-sm-1 col-md-1 col-lg-1 col-xl-1">
             <?php View::element('user_avatar', ['user' => $message->user], 'ortic_forum') ?>
         </div>
-        <div class="col-xs-11">
-            <div>
+        <div class="col-xs-10 col-sm-11 col-md-11 col-lg-11 col-xl-11">
+            <div class="ortic-forum-message-author">
                 <strong><?php View::element('user_link', ['user' => $message->user], 'ortic_forum') ?></strong>
                 <?= Core::make('helper/date')->formatDateTime($currentPage->getCollectionDateLastModified()) ?>
                 <?php if ($message->canEdit()) { ?>
