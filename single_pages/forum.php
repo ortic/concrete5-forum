@@ -17,7 +17,7 @@ $request = Request::getInstance();
     <tr>
         <th><?= t('Subject') ?></th>
         <th><?= t('Author') ?></th>
-        <th><?= t('Created Date') ?></th>
+        <th><?= t('Replies') ?></th>
         <th><?= t('Last Activity Date') ?></th>
         <th></th>
     </tr>
@@ -35,10 +35,12 @@ $request = Request::getInstance();
                 <?php View::element('user_link', ['user' => UserInfo::getByID($topic->getVersionObject()->getVersionAuthorUserID())], 'ortic_forum') ?>
             </td>
             <td>
-                <?= $date->formatDateTime($topic->getCollectionDateLastModified()) ?>
+                <?= $topic->messageCount - 1 ?>
             </td>
             <td>
-                <?= $date->formatDateTime($topic->lastMessageCreated) ?>
+                <a href="<?= $topic->getCollectionLink() ?>#message-<?=$topic->lastMessageId?>">
+                    <?= $date->formatDateTime($topic->lastMessageCreated) ?>
+                </a>
             </td>
             <td class="text-right">
                 <a href="<?= $topic->getCollectionLink() ?>" class="btn btn-xs btn-primary">
