@@ -94,6 +94,11 @@ class Forum
         $em->persist($forumMessage);
         $em->flush();
 
+        if ($attachment) {
+            $tracker = Core::make('statistics/tracker');
+            $tracker->track($forumMessage);
+        }
+
         $this->updateLastMessage();
     }
 
@@ -162,6 +167,11 @@ class Forum
     {
         $pkg = Package::getByHandle('ortic_forum');
 
+        // remove message/file from usage tracker
+        $tracker = Core::make('statistics/tracker');
+        $tracker->forget($message);
+
+        // delete message
         $em = $pkg->getEntityManager();
 
         $em->remove($message);
@@ -263,6 +273,11 @@ class Forum
 
         $em->persist($object);
         $em->flush();
+
+        if ($attachment) {
+            $tracker = Core::make('statistics/tracker');
+            $tracker->track($object);
+        }
 
         return $topicPage;
     }

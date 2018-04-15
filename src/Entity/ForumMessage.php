@@ -3,14 +3,17 @@
 namespace Concrete\Package\OrticForum\Src\Entity;
 
 use Concrete\Core\Entity\User\User;
+use Concrete\Core\File\Tracker\FileTrackableInterface;
+use Concrete\Core\Page\Collection\Collection;
 use Core;
 use File;
+use Page;
 
 /**
  * @Entity
  * @Table(name="OrticForumMessages")
  */
-class ForumMessage
+class ForumMessage implements FileTrackableInterface
 {
     /**
      * @Id
@@ -267,4 +270,21 @@ class ForumMessage
         return $forum->canEditMessage($this);
     }
 
+    /**
+     * @return Collection The collection these files are attached to
+     */
+    public function getUsedCollection()
+    {
+        return Page::getByID($this->getPageId());
+    }
+
+    /**
+     * @return array An array of file IDs or file objects
+     */
+    public function getUsedFiles()
+    {
+        if ($attachmentFileId = $this->getAttachmentFileId()) {
+            return [$attachmentFileId];
+        }
+    }
 }
