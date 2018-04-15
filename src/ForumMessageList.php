@@ -66,7 +66,7 @@ class ForumMessageList extends DatabaseItemList
      */
     public function filterByForumIds(array $includedForumIds)
     {
-        $this->query->where('m.cID IN (:cIDs)')->setParameter('cIDs', $includedForumIds, Connection::PARAM_INT_ARRAY);
+        $this->query->where('m.cID IN (SELECT cID FROM Pages WHERE cParentID IN (:cIDs))')->setParameter('cIDs', $includedForumIds, Connection::PARAM_INT_ARRAY);
     }
 
     /**

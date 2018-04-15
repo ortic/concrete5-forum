@@ -333,6 +333,6 @@ class Forum
         $page = Page::getByID($message->getPageId());
         $pageLink = $page->getCollectionLink();
 
-        return $pageLink . '/' . $message->getSlug();
+        return $pageLink . '#messsage-' . $message->getID();
     }
 }

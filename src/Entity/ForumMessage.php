@@ -156,6 +156,14 @@ class ForumMessage implements FileTrackableInterface
     }
 
     /**
+     * @return \Concrete\Core\Page\Page
+     */
+    public function getPage()
+    {
+        return Page::getByID($this->getPageId());
+    }
+
+    /**
      * @param mixed $pageId
      * @return ForumMessage
      */
@@ -189,6 +197,13 @@ class ForumMessage implements FileTrackableInterface
     public function getMessage()
     {
         return $this->message;
+    }
+
+    public function getMessageTeaser($length = 120)
+    {
+        $forum = Core::make('ortic/forum');
+
+        return $forum->limitString($this->getMessage(), $length);
     }
 
     /**
@@ -275,7 +290,7 @@ class ForumMessage implements FileTrackableInterface
      */
     public function getUsedCollection()
     {
-        return Page::getByID($this->getPageId());
+        return $this->getPage();
     }
 
     /**

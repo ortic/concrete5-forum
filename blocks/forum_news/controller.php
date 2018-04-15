@@ -64,7 +64,7 @@ class Controller extends BlockController
     {
         $forumMessageList = new ForumMessageList();
         $forumMessageList->filterByForumIds($this->getIncludedForumIds());
-        $forumMessageList->setItemsPerPage($this->messagesToShow ?: 5);
+        $forumMessageList->getQueryObject()->setMaxResults($this->messagesToShow ?: 5);
         $forumMessageList->sortBy('dateCreated', 'desc');
 
         $forumMessages = $forumMessageList->getResults();
