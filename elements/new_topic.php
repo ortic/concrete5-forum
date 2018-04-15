@@ -3,7 +3,7 @@
 <h3><?= t('Create new topic') ?></h3>
 
 <?php if (User::isLoggedIn()) { ?>
-    <form method="POST" action="<?= $self->action('writeTopic') ?>">
+    <form method="POST" action="<?= $self->action('writeTopic') ?>" enctype="multipart/form-data">
         <?= $token->output('writeTopic') ?>
 
         <div class="form-group">
@@ -13,6 +13,10 @@
         <div class="form-group">
             <label for="message"><?= t('Message') ?></label>
             <textarea type="text" class="form-control" name="message" id="message" placeholder=""><?=h($forumTopicMessage)?></textarea>
+        </div>
+        <div class="form-group">
+            <label for="attachment"><?= t('Attachment') ?></label>
+            <input type="file" class="form-control" name="attachment" id="attachment" placeholder="">
         </div>
         <button class="btn btn-primary"><?= t('Post Message') ?></button>
     </form>

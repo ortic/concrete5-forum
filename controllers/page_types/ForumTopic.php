@@ -51,6 +51,7 @@ class ForumTopic extends PageTypeController
     public function writeAnswer()
     {
         $token = Core::make('token');
+        $forum = Core::make('ortic/forum');
 
         if ($this->getRequest()->isPost()) {
             if (!$token->validate('writeAnswer')) {
@@ -61,9 +62,20 @@ class ForumTopic extends PageTypeController
                 $this->error->add(t('You must enter a message'));
             }
 
+            // upload attachment, but only if there are no errors, otherwise we'd upload the file without having any
+            // association to it
+            $attachment = null;
             if (!$this->error->has()) {
-                $forum = Core::make('ortic/forum');
-                $forum->writeAnswer($this->post('message'));
+                try {
+                    $attachment = $forum->uploadAttachment($_FILES['attachment']);
+                }
+                catch (\Exception $ex) {
+                    $this->error->add($ex->getMessage());
+                }
+            }
+
+            if (!$this->error->has()) {
+                $forum->writeAnswer($this->post('message'), $attachment);
 
                 $this->flash('forumSuccess', t('Message added'));
                 return Redirect::to($this->action(''));

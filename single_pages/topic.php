@@ -32,7 +32,8 @@ $token = Core::make('token');
                         <?= t('Cancel') ?>
                     </a>
                     |
-                    <a class="ortic-forum-delete" href="<?= $this->action('deleteMessage', [$message->getID(), $token->generate('deleteMessage')]) ?>">
+                    <a class="ortic-forum-delete"
+                       href="<?= $this->action('deleteMessage', [$message->getID(), $token->generate('deleteMessage')]) ?>">
                         <?= t('Delete') ?>
                     </a>
                 <?php } ?>
@@ -41,6 +42,9 @@ $token = Core::make('token');
                 <p>
                     <?= nl2br($message->getMessage()) ?>
                 </p>
+                <?php if ($attachment = $message->getAttachmentFile()) { ?>
+                    <a href="<?= $attachment->getURL() ?>" target="_blank"><?= $attachment->getFileName() ?></a>
+                <?php } ?>
             </div>
             <div class="ortic-forum-message-edit" style="display: none;">
                 <form method="POST" action="<?= $this->action('updateMessage', [$message->getID()]) ?>">

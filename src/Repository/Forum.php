@@ -2,6 +2,9 @@
 
 namespace Concrete\Package\OrticForum\Src\Repository;
 
+use Concrete\Core\Entity\File\Version;
+use Concrete\Core\File\Set\Set as FileSet;
+use Concrete\Core\File\Importer;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\User\Group\Group;
 use Concrete\Package\OrticForum\Src\Entity\ForumMessage;
@@ -65,8 +68,9 @@ class Forum
      * Adds a new answer for the current user to the topic specified by $topic.
      *
      * @param string $message
+     * @param Version|null $attachment
      */
-    public function writeAnswer(string $message)
+    public function writeAnswer(string $message, Version $attachment = null)
     {
         $pkg = Package::getByHandle('ortic_forum');
         $em = $pkg->getEntityManager();
@@ -83,12 +87,20 @@ class Forum
         $forumMessage->setFirstMessage(0);
         $forumMessage->setLastMessage(1);
 
+        if ($attachment) {
+            $forumMessage->setAttachmentFileId($attachment->getFileID());
+        }
+
         $em->persist($forumMessage);
         $em->flush();
 
         $this->updateLastMessage();
     }
 
+    /**
+     * When a message is added or removed we have to mark the last message properly. This is needed to get the last
+     * activity date of a topic without an ugly aggregation.
+     */
     protected function updateLastMessage()
     {
         $pkg = Package::getByHandle('ortic_forum');
@@ -176,13 +188,47 @@ class Forum
     }
 
     /**
+     * Uploads a file to the concrete5 file manager. All files will be added to the set defined by
+     * ortic_forum.attachment_fileset_name. Throws exception if there's a problem.
+     *
+     * @param array $attachment
+     * @return Version;
+     * @throws \Exception
+     */
+    public function uploadAttachment(array $attachment)
+    {
+        $file = $attachment['tmp_name'];
+        $filename = $attachment['name'];
+        if ($filename) {
+            $importer = new Importer();
+            $attachmentResult = $importer->import($file, $filename);
+
+            if (is_int($attachmentResult)) {
+                $errorMessage = Importer::getErrorMessage($attachmentResult);
+                throw new \Exception($errorMessage);
+            }
+
+            // attachment file to file set
+            $config = Core::make('ortic/forum/config');
+            $attachmentFilesetName = $config->get('ortic_forum.attachment_fileset_name');
+            if ($attachmentFilesetName) {
+                $fileSet = FileSet::createAndGetSet($attachmentFilesetName, FileSet::TYPE_PUBLIC);
+                $fileSet->addFileToSet($attachmentResult);
+            }
+
+            return $attachmentResult;
+        }
+    }
+
+    /**
      * Adds a new topic to the current forum (page)
      *
      * @param string $subject
      * @param string $message
+     * @param Version $attachment
      * @return \Concrete\Core\Page\Page
      */
-    public function writeTopic(string $subject, string $message)
+    public function writeTopic(string $subject, string $message, Version $attachment = null)
     {
         $pkg = Package::getByHandle('ortic_forum');
 
@@ -197,7 +243,6 @@ class Forum
             'cDescription' => $this->limitString($message),
         ), $template);
 
-
         $em = $pkg->getEntityManager();
 
         $user = new User();
@@ -211,6 +256,10 @@ class Forum
         $object->setPageId($topicPage->getCollectionId());
         $object->setLastMessage(1);
         $object->setFirstMessage(1);
+
+        if ($attachment) {
+            $object->setAttachmentFileId($attachment->getFileID());
+        }
 
         $em->persist($object);
         $em->flush();

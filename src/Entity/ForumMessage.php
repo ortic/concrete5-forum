@@ -4,6 +4,7 @@ namespace Concrete\Package\OrticForum\Src\Entity;
 
 use Concrete\Core\Entity\User\User;
 use Core;
+use File;
 
 /**
  * @Entity
@@ -53,6 +54,41 @@ class ForumMessage
      * @Column(type="datetime")
      */
     protected $dateUpdated;
+
+    /**
+     * @Column(type="integer", nullable=true)
+     */
+    protected $attachmentFileId;
+
+    /**
+     * @return mixed
+     */
+    public function getAttachmentFileId()
+    {
+        return $this->attachmentFileId;
+    }
+
+    /**
+     * @param mixed $attachmentFileId
+     * @return ForumMessage
+     */
+    public function setAttachmentFileId($attachmentFileId)
+    {
+        $this->attachmentFileId = $attachmentFileId;
+        return $this;
+    }
+
+    /**
+     * @return \Concrete\Core\Entity\File\File|null
+     */
+    public function getAttachmentFile()
+    {
+        if ($this->attachmentFileId) {
+            $f = File::getByID($this->attachmentFileId);
+
+            return $f;
+        }
+    }
 
     /**
      * @return mixed
