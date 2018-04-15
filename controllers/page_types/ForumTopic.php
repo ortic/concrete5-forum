@@ -165,8 +165,6 @@ class ForumTopic extends PageTypeController
             $this->flash('forumError', $token->getErrorMessage());
             return Redirect::to($this->action(''));
         }
-
-        return Redirect::to($this->action(''));
     }
 
 }

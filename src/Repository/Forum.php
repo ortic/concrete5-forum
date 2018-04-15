@@ -119,7 +119,7 @@ class Forum
         $messageList->filterByTopicId($topicPage->getCollectionID());
         $messageList->sortBy('mID', 'asc');
 
-        $messages = $messageList->get();
+        $messages = $messageList->getResults();
 
         // clear last message flag for all messages
         foreach ($messages as $message) {

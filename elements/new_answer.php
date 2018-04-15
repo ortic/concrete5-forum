@@ -8,7 +8,7 @@
 
         <div class="form-group">
             <label for="message"><?= t('Message') ?></label>
-            <textarea type="text" class="form-control" name="message" id="message" placeholder=""></textarea>
+            <textarea class="form-control" name="message" id="message" placeholder=""></textarea>
         </div>
         <div class="form-group">
             <label for="attachment"><?= t('Attachment') ?></label>

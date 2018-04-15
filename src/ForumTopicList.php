@@ -10,6 +10,8 @@ class ForumTopicList extends PageList
 
     /**
      * join our forum message table to get the time of the last activity
+     * @param QueryBuilder $query
+     * @return QueryBuilder
      */
     public function finalizeQuery(QueryBuilder $query)
     {

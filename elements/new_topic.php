@@ -12,7 +12,9 @@
         </div>
         <div class="form-group">
             <label for="message"><?= t('Message') ?></label>
-            <textarea type="text" class="form-control" name="message" id="message" placeholder=""><?=h($forumTopicMessage)?></textarea>
+            <textarea class="form-control" name="message" id="message" placeholder="">
+                <?=h($forumTopicMessage)?>
+            </textarea>
         </div>
         <div class="form-group">
             <label for="attachment"><?= t('Attachment') ?></label>

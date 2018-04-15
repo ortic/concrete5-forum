@@ -50,8 +50,9 @@ $token = Core::make('token');
                 <form method="POST" action="<?= $this->action('updateMessage', [$message->getID()]) ?>">
                     <?= $token->output('updateMessage'); ?>
 
-                    <textarea type="text" class="form-control" name="message" id="message"
-                              placeholder=""><?= $message->getMessage() ?></textarea>
+                    <textarea class="form-control" name="message" id="message" placeholder="">
+                        <?= $message->getMessage() ?>
+                    </textarea>
                     <button class="btn btn-primary"><?= t('Save') ?></button>
                 </form>
             </div>
