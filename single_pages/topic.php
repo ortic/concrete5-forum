@@ -48,7 +48,7 @@ $token = Core::make('token');
             </div>
             <div class="ortic-forum-message-edit" style="display: none;">
                 <form method="POST" action="<?= $this->action('updateMessage', [$message->getID()]) ?>">
-                    <?php echo $token->output('updateMessage'); ?>
+                    <?= $token->output('updateMessage'); ?>
 
                     <textarea type="text" class="form-control" name="message" id="message"
                               placeholder=""><?= $message->getMessage() ?></textarea>
