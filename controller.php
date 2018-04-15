@@ -4,6 +4,7 @@ namespace Concrete\Package\OrticForum;
 
 use Concrete\Core\Application\Application;
 use Concrete\Core\Backup\ContentImporter;
+use Concrete\Core\Package\PackageService;
 use Concrete\Package\OrticForum\Src\Repository\Forum;
 use Package;
 use Core;
@@ -39,7 +40,7 @@ class Controller extends Package
 
     protected function installXml()
     {
-        $pkg = Package::getByHandle($this->pkgHandle);
+        $pkg = Core::make(PackageService::class)->getByHandle($this->pkgHandle);
         $ci = new ContentImporter();
         $ci->importContentFile($pkg->getPackagePath() . '/install.xml');
     }
@@ -51,7 +52,7 @@ class Controller extends Package
         });
 
         $this->app->singleton('ortic/forum/config', function (Application $app) {
-            $pkg = Package::getByHandle('ortic_forum');
+            $pkg = Core::make(PackageService::class)->getByHandle('ortic_forum');
             return $pkg->getFileConfig();
         });
     }
@@ -59,7 +60,7 @@ class Controller extends Package
     protected function registerAssets()
     {
         $al = AssetList::getInstance();
-        $pkg = Package::getByHandle($this->pkgHandle);
+        $pkg = Core::make(PackageService::class)->getByHandle($this->pkgHandle);
 
         $al->register('javascript', 'ortic/forum', 'js/forum.js',
             ['minify' => true, 'combine' => true], $pkg

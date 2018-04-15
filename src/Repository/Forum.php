@@ -5,6 +5,7 @@ namespace Concrete\Package\OrticForum\Src\Repository;
 use Concrete\Core\Entity\File\Version;
 use Concrete\Core\File\Set\Set as FileSet;
 use Concrete\Core\File\Importer;
+use Concrete\Core\Package\PackageService;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\User\Group\Group;
 use Concrete\Package\OrticForum\Src\Entity\ForumMessage;
@@ -27,7 +28,7 @@ class Forum
      */
     public function getTopicById(int $id)
     {
-        $pkg = Package::getByHandle('ortic_forum');
+        $pkg = Core::make(PackageService::class)->getByHandle('ortic_forum');
         $em = $pkg->getEntityManager();
         $topic = $em->getRepository('Concrete\Package\OrticForum\Src\Entity\ForumMessage')->find($id);
         return $topic;
@@ -41,7 +42,7 @@ class Forum
      */
     public function getMessage(int $id)
     {
-        $pkg = Package::getByHandle('ortic_forum');
+        $pkg = Core::make(PackageService::class)->getByHandle('ortic_forum');
         $em = $pkg->getEntityManager();
         $message = $em->getRepository('Concrete\Package\OrticForum\Src\Entity\ForumMessage')->find($id);
 
@@ -72,7 +73,7 @@ class Forum
      */
     public function writeAnswer(string $message, Version $attachment = null)
     {
-        $pkg = Package::getByHandle('ortic_forum');
+        $pkg = Core::make(PackageService::class)->getByHandle('ortic_forum');
         $em = $pkg->getEntityManager();
 
         $user = new User();
@@ -108,7 +109,7 @@ class Forum
      */
     protected function updateLastMessage()
     {
-        $pkg = Package::getByHandle('ortic_forum');
+        $pkg = Core::make(PackageService::class)->getByHandle('ortic_forum');
         $em = $pkg->getEntityManager();
 
         $topicPage = Page::getCurrentPage();
@@ -147,7 +148,7 @@ class Forum
      */
     public function updateMessage(ForumMessage $message, string $messageTxt)
     {
-        $pkg = Package::getByHandle('ortic_forum');
+        $pkg = Core::make(PackageService::class)->getByHandle('ortic_forum');
 
         $em = $pkg->getEntityManager();
 
@@ -165,7 +166,7 @@ class Forum
      */
     public function deleteMessage(ForumMessage $message)
     {
-        $pkg = Package::getByHandle('ortic_forum');
+        $pkg = Core::make(PackageService::class)->getByHandle('ortic_forum');
 
         // remove message/file from usage tracker
         $tracker = Core::make('statistics/tracker');
@@ -240,7 +241,7 @@ class Forum
      */
     public function writeTopic(string $subject, string $message, Version $attachment = null)
     {
-        $pkg = Package::getByHandle('ortic_forum');
+        $pkg = Core::make(PackageService::class)->getByHandle('ortic_forum');
 
         // create new sub page
         $currentPage = Page::getCurrentPage();

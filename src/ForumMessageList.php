@@ -2,12 +2,13 @@
 
 namespace Concrete\Package\OrticForum\Src;
 
+use Concrete\Core\Package\PackageService;
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
 use Concrete\Core\Search\Pagination\Pagination;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
-use Package;
+use Core;
 
 class ForumMessageList extends DatabaseItemList
 {
@@ -102,7 +103,7 @@ class ForumMessageList extends DatabaseItemList
      */
     public function getResult($queryRow)
     {
-        $pkg = Package::getByHandle('ortic_forum');
+        $pkg = Core::make(PackageService::class)->getByHandle('ortic_forum');
         $em = $pkg->getEntityManager();
         $message = $em->getRepository('Concrete\Package\OrticForum\Src\Entity\ForumMessage')->find($queryRow['mID']);
 
