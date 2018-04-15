@@ -131,7 +131,7 @@ class Forum
         }
 
         // make sure last message is actually marked as last message
-        if (!$message->getLastMessage()) {
+        if ($message && !$message->getLastMessage()) {
             $message->setLastMessage(1);
 
             $em->persist($message);
