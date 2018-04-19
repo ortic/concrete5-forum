@@ -1,6 +1,6 @@
 <hr>
 
-<h3><?= t('Add reply') ?></h3>
+<h3 id="reply"><?= t('Add reply') ?></h3>
 
 <?php if (User::isLoggedIn()) { ?>
     <form method="POST" action="<?= $self->action('writeAnswer') ?>" enctype="multipart/form-data">

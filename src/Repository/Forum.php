@@ -347,15 +347,15 @@ class Forum
     /**
      * Subscribe the current user to the topic the message belongs to
      *
-     * @param ForumMessage $message
+     * @param Page $topicPage
      */
-    public function subscribeForTopicChanges(ForumMessage $message)
+    public function subscribeForTopicChanges(Page $topicPage)
     {
         $pkg = Core::make(PackageService::class)->getByHandle('ortic_forum');
         $em = $pkg->getEntityManager();
 
         $topicMonitor = new ForumMonitoring();
-        $topicMonitor->setPageId($message->getPageId());
+        $topicMonitor->setPageId($topicPage->getCollectionID());
         $topicMonitor->setUser((new User())->getUserInfoObject()->getEntityObject());
 
         $em->persist($topicMonitor);
@@ -365,16 +365,16 @@ class Forum
     /**
      * Unsubscribe the current user to the topic the message belongs to
      *
-     * @param ForumMessage $message
+     * @param Page $topicPage
      */
-    public function unsubscribeFromTopicChanges(ForumMessage $message)
+    public function unsubscribeFromTopicChanges(Page $topicPage)
     {
         $pkg = Core::make(PackageService::class)->getByHandle('ortic_forum');
         $em = $pkg->getEntityManager();
 
         $topicMonitor = $em
             ->getRepository('Concrete\Package\OrticForum\Src\Entity\ForumMonitoring')
-            ->findOneBy(['pageId' => $message->getPageId(), 'user' => (new User())->getUserID()]);
+            ->findOneBy(['pageId' => $topicPage->getCollectionID(), 'user' => (new User())->getUserID()]);
 
         if ($topicMonitor) {
             $em->remove($topicMonitor);
@@ -414,5 +414,21 @@ class Forum
             $mh->load('new_answer', 'ortic_forum');
             $mh->sendMail();
         }
+    }
+
+    public function isMonitoring(Page $topicPage)
+    {
+        $currentUser = new User();
+        if (!$currentUser) {
+            return false;
+        }
+        $pkg = Core::make(PackageService::class)->getByHandle('ortic_forum');
+        $em = $pkg->getEntityManager();
+
+        $topicMonitor = $em
+            ->getRepository('Concrete\Package\OrticForum\Src\Entity\ForumMonitoring')
+            ->findOneBy(['pageId' => $topicPage->getCollectionID(), 'user' => (new User())->getUserID()]);
+
+        return !!$topicMonitor;
     }
 }

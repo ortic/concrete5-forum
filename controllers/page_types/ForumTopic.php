@@ -38,6 +38,7 @@ class ForumTopic extends PageTypeController
 
         $this->set('messages', $messages);
         $this->set('user', new User());
+        $this->set('isMonitoring', $forum->isMonitoring($currentPage));
         $this->set('currentPage', $currentPage);
 
         $this->render('topic', 'ortic_forum');
@@ -78,11 +79,12 @@ class ForumTopic extends PageTypeController
                 $forumMessage = $forum->writeAnswer($this->post('message'), $attachment);
 
                 // sign up user to receive notifications
+                $topicPage = Page::getByID($forumMessage->getPageId());
                 if ($this->post('subscribe')) {
-                    $forum->subscribeForTopicChanges($forumMessage);
+                    $forum->subscribeForTopicChanges($topicPage);
                 }
                 else {
-                    $forum->unsubscribeFromTopicChanges($forumMessage);
+                    $forum->unsubscribeFromTopicChanges($topicPage);
                 }
 
                 $this->flash('forumSuccess', t('Message added'));
@@ -173,6 +175,35 @@ class ForumTopic extends PageTypeController
             $this->flash('forumError', $token->getErrorMessage());
             return Redirect::to($this->action(''));
         }
+    }
+
+    /**
+     * Stops the current user from receiving notifications on new answers to the current topic
+     * 
+     * @return \Concrete\Core\Routing\RedirectResponse
+     */
+    public function stopMonitoring()
+    {
+        $forum = Core::make('ortic/forum');
+        $forum->unsubscribeFromTopicChanges(Page::getCurrentPage());
+
+        $this->flash('forumSuccess', t('Monitoring disabled.'));
+        return Redirect::to($this->action(''));
+    }
+
+
+    /**
+     * Subscribers the current user to changes to the current topic
+     *
+     * @return \Concrete\Core\Routing\RedirectResponse
+     */
+    public function startMonitoring()
+    {
+        $forum = Core::make('ortic/forum');
+        $forum->subscribeForTopicChanges(Page::getCurrentPage());
+
+        $this->flash('forumSuccess', t('Monitoring enabled.'));
+        return Redirect::to($this->action(''));
     }
 
 }

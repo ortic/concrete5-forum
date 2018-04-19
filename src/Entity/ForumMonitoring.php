@@ -80,5 +80,4 @@ class ForumMonitoring
         return $this;
     }
 
-
 }
