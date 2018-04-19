@@ -179,7 +179,7 @@ class ForumTopic extends PageTypeController
 
     /**
      * Stops the current user from receiving notifications on new answers to the current topic
-     * 
+     *
      * @return \Concrete\Core\Routing\RedirectResponse
      */
     public function stopMonitoring()
@@ -204,6 +204,27 @@ class ForumTopic extends PageTypeController
 
         $this->flash('forumSuccess', t('Monitoring enabled.'));
         return Redirect::to($this->action(''));
+    }
+
+    /**
+     * Returns the content that needs to be indexed by the page search
+     *
+     * @return string|void
+     */
+    public function getSearchableContent()
+    {
+        $forum = Core::make('ortic/forum');
+
+        $currentPage = $this->getPageObject();
+        $messages = $forum->getMessages($currentPage);
+
+        $text = '';
+
+        foreach ($messages as $message) {
+            $text .= $message->getMessage() . "\n";
+        }
+
+        return trim($text);
     }
 
 }
