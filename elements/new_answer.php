@@ -14,6 +14,12 @@
             <label for="attachment"><?= t('Attachment') ?></label>
             <input type="file" class="form-control" name="attachment" id="attachment" placeholder="">
         </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="1" id="subscribe" name="subscribe" checked>
+            <label class="form-check-label" for="subscribe">
+                <?=t('Send email when new message is posted')?>
+            </label>
+        </div>
         <button class="btn btn-primary"><?= t('Post Message') ?></button>
     </form>
 <?php } else { ?>

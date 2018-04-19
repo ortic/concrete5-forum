@@ -12,8 +12,7 @@ $token = Core::make('token');
 
 <h1><?= $currentPage->getCollectionName() ?></h1>
 
-<?php foreach ($messages as $message) {
-    ?>
+<?php foreach ($messages as $message) { ?>
     <div class="ortic-forum-message row thumbnail" id="message-<?= $message->getID() ?>">
 
         <div class="col-xs-2 col-sm-1 col-md-1 col-lg-1 col-xl-1">

@@ -1,14 +1,14 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: ortic_forum 0.0.5\n"
+"Project-Id-Version: ortic_forum 0.0.6\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2018-04-15T11:25:10+02:00\n"
-"PO-Revision-Date: 2018-04-15T11:25:10+02:00\n"
+"POT-Creation-Date: 2018-04-19T09:04:44+02:00\n"
+"PO-Revision-Date: 2018-04-19T09:04:45+02:00\n"
 "Language: en_US\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
@@ -42,11 +42,11 @@ msgstr ""
 msgid "Forum Topic"
 msgstr ""
 
-#: packages/ortic_forum/controller.php:20
+#: packages/ortic_forum/controller.php:21
 msgid "Ortic Forum"
 msgstr ""
 
-#: packages/ortic_forum/controller.php:25
+#: packages/ortic_forum/controller.php:26
 msgid "Simple forum solution"
 msgstr ""
 
@@ -79,15 +79,15 @@ msgstr ""
 msgid "Topic added"
 msgstr ""
 
-#: packages/ortic_forum/controllers/page_types/ForumTopic.php:80
+#: packages/ortic_forum/controllers/page_types/ForumTopic.php:88
 msgid "Message added"
 msgstr ""
 
-#: packages/ortic_forum/controllers/page_types/ForumTopic.php:115
+#: packages/ortic_forum/controllers/page_types/ForumTopic.php:123
 msgid "Message updated."
 msgstr ""
 
-#: packages/ortic_forum/controllers/page_types/ForumTopic.php:150
+#: packages/ortic_forum/controllers/page_types/ForumTopic.php:158
 msgid "Message deleted."
 msgstr ""
 
@@ -101,17 +101,21 @@ msgid "Message"
 msgstr ""
 
 #: packages/ortic_forum/elements/new_answer.php:14
-#: packages/ortic_forum/elements/new_topic.php:18
+#: packages/ortic_forum/elements/new_topic.php:20
 msgid "Attachment"
 msgstr ""
 
-#: packages/ortic_forum/elements/new_answer.php:17
-#: packages/ortic_forum/elements/new_topic.php:21
+#: packages/ortic_forum/elements/new_answer.php:20
+msgid "Send email when new message is posted"
+msgstr ""
+
+#: packages/ortic_forum/elements/new_answer.php:23
+#: packages/ortic_forum/elements/new_topic.php:23
 msgid "Post Message"
 msgstr ""
 
-#: packages/ortic_forum/elements/new_answer.php:21
-#: packages/ortic_forum/elements/new_topic.php:25
+#: packages/ortic_forum/elements/new_answer.php:27
+#: packages/ortic_forum/elements/new_topic.php:27
 #, php-format
 msgid "Please <a href=\"%s\">sign in</a> or <a href=\"%s\">register</a> to write a new topic."
 msgstr ""
@@ -130,6 +134,23 @@ msgstr ""
 msgid "Deleted User"
 msgstr ""
 
+#: packages/ortic_forum/mail/new_answer.php:6
+#, php-format
+msgid ""
+"\n"
+"%s has posted to a forum topic you're monitoring: \n"
+"\n"
+"Message:\n"
+"\n"
+"%s\n"
+"\n"
+"Click the link below to view the discussion:\n"
+"%s\n"
+"\n"
+"Best regards\n"
+""
+msgstr ""
+
 #: packages/ortic_forum/single_pages/forum.php:19
 msgid "Author"
 msgstr ""
@@ -146,18 +167,18 @@ msgstr ""
 msgid "Show Topic"
 msgstr ""
 
-#: packages/ortic_forum/single_pages/topic.php:29
+#: packages/ortic_forum/single_pages/topic.php:28
 msgid "Edit"
 msgstr ""
 
-#: packages/ortic_forum/single_pages/topic.php:32
+#: packages/ortic_forum/single_pages/topic.php:31
 msgid "Cancel"
 msgstr ""
 
-#: packages/ortic_forum/single_pages/topic.php:37
+#: packages/ortic_forum/single_pages/topic.php:36
 msgid "Delete"
 msgstr ""
 
-#: packages/ortic_forum/single_pages/topic.php:55
+#: packages/ortic_forum/single_pages/topic.php:53
 msgid "Save"
 msgstr ""

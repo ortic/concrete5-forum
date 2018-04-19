@@ -11,7 +11,12 @@ use Page;
 
 /**
  * @Entity
- * @Table(name="OrticForumMessages")
+ * @Table(
+ *     name="OrticForumMessages",
+ *     indexes={
+ *          @Index(name="cID", columns={"cID"})
+ *     }
+ * )
  */
 class ForumMessage implements FileTrackableInterface
 {
@@ -30,7 +35,7 @@ class ForumMessage implements FileTrackableInterface
     /**
      * @ManyToOne(targetEntity="\Concrete\Core\Entity\User\User")
      * @JoinColumn(name="userId", referencedColumnName="uID", onDelete="SET NULL")
-     **/
+     */
     public $user;
 
     /**

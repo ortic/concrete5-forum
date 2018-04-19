@@ -75,7 +75,15 @@ class ForumTopic extends PageTypeController
             }
 
             if (!$this->error->has()) {
-                $forum->writeAnswer($this->post('message'), $attachment);
+                $forumMessage = $forum->writeAnswer($this->post('message'), $attachment);
+
+                // sign up user to receive notifications
+                if ($this->post('subscribe')) {
+                    $forum->subscribeForTopicChanges($forumMessage);
+                }
+                else {
+                    $forum->unsubscribeFromTopicChanges($forumMessage);
+                }
 
                 $this->flash('forumSuccess', t('Message added'));
                 return Redirect::to($this->action(''));

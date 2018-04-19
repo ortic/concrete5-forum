@@ -9,6 +9,7 @@ use Concrete\Core\Package\PackageService;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\User\Group\Group;
 use Concrete\Package\OrticForum\Src\Entity\ForumMessage;
+use Concrete\Package\OrticForum\Src\Entity\ForumMonitoring;
 use Concrete\Package\OrticForum\Src\ForumMessageList;
 use Concrete\Package\OrticForum\Src\ForumTopicList;
 use Package;
@@ -70,6 +71,7 @@ class Forum
      *
      * @param string $message
      * @param Version|null $attachment
+     * @return ForumMessage
      */
     public function writeAnswer(string $message, Version $attachment = null)
     {
@@ -101,6 +103,11 @@ class Forum
         }
 
         $this->updateLastMessage();
+
+        // send notification about new message to subscribers
+        $this->sentNotificationToTopicSubscribers($forumMessage);
+
+        return $forumMessage;
     }
 
     /**
@@ -335,5 +342,77 @@ class Forum
         $pageLink = $page->getCollectionLink();
 
         return $pageLink . '#messsage-' . $message->getID();
+    }
+
+    /**
+     * Subscribe the current user to the topic the message belongs to
+     *
+     * @param ForumMessage $message
+     */
+    public function subscribeForTopicChanges(ForumMessage $message)
+    {
+        $pkg = Core::make(PackageService::class)->getByHandle('ortic_forum');
+        $em = $pkg->getEntityManager();
+
+        $topicMonitor = new ForumMonitoring();
+        $topicMonitor->setPageId($message->getPageId());
+        $topicMonitor->setUser((new User())->getUserInfoObject()->getEntityObject());
+
+        $em->persist($topicMonitor);
+        $em->flush();
+    }
+
+    /**
+     * Unsubscribe the current user to the topic the message belongs to
+     *
+     * @param ForumMessage $message
+     */
+    public function unsubscribeFromTopicChanges(ForumMessage $message)
+    {
+        $pkg = Core::make(PackageService::class)->getByHandle('ortic_forum');
+        $em = $pkg->getEntityManager();
+
+        $topicMonitor = $em
+            ->getRepository('Concrete\Package\OrticForum\Src\Entity\ForumMonitoring')
+            ->findOneBy(['pageId' => $message->getPageId(), 'user' => (new User())->getUserID()]);
+
+        if ($topicMonitor) {
+            $em->remove($topicMonitor);
+            $em->flush();
+        }
+    }
+
+    /**
+     * Send notifications to subscribers of the topic that the message belongs to
+     *
+     * @param ForumMessage $message
+     * @throws \Exception
+     */
+    public function sentNotificationToTopicSubscribers(ForumMessage $message)
+    {
+        $pkg = Core::make(PackageService::class)->getByHandle('ortic_forum');
+        $em = $pkg->getEntityManager();
+
+        $currentUser = new User();
+
+        $query = $em->createQuery('SELECT m FROM \Concrete\Package\OrticForum\Src\Entity\ForumMonitoring m WHERE m.pageId = :pageId AND m.user != :user');
+        $query->setParameter('pageId', $message->getPageId());
+        $query->setParameter('user', $currentUser->getUserID());
+        $topicSubscribers = $query->getResult();
+
+        $topicPage = Page::getByID($message->getPageId());
+
+        foreach ($topicSubscribers as $topicSubscriber) {
+            $topicSubscriberUser = $topicSubscriber->getUser();
+
+            $mh = Core::make('mail');
+            $mh->to($topicSubscriberUser->getUserEmail());
+            $mh->addParameter('message', $message);
+            $mh->addParameter('topicPage', $topicPage);
+            $mh->addParameter('currentUser', $currentUser);
+
+            $mh->load('new_answer', 'ortic_forum');
+            $mh->sendMail();
+        }
     }
 }
