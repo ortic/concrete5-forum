@@ -16,3 +16,11 @@ You can customize the forum by copying `config/ortic_forum.php` to `application/
 
 * `admin_group` The group of users that has the permission to update and delete forum messages of others.
 * `attachment_fileset_name` The name of the fileset to which the files from the forum will be added.
+
+## Customizing output
+
+The forum uses single pages to render its output. Make sure you properly implement `view.php` in your theme. The forum will be rendered where `view.php` echo's `$innerContent`.
+
+If that isn't enough, copy the content of https://github.com/ortic/concrete5-forum/blob/master/single_pages/forum.php to `application/single_pages/forum.php` and amend whatever you'd like to change. The same works for `topic.php`.
+
+If that isn't enough, create a file called `forum.php` in your theme. Include the header, footer and whatever else you include from your `view.php`. Instead of echoing the content of `$innerContent`, use the content of https://github.com/ortic/concrete5-forum/blob/master/single_pages/forum.php and change whatever you like.
