@@ -16,9 +16,9 @@ $request = Request::getInstance();
     <thead>
     <tr>
         <th><?= t('Subject') ?></th>
-        <th><?= t('Author') ?></th>
+        <th><?= t('Original Post') ?></th>
+        <th><?= t('Last Post') ?></th>
         <th><?= t('Replies') ?></th>
-        <th><?= t('Last Activity Date') ?></th>
         <th></th>
     </tr>
     </thead>
@@ -32,15 +32,16 @@ $request = Request::getInstance();
                 </a>
             </td>
             <td>
-                <?php View::element('user_link', ['user' => UserInfo::getByID($topic->getVersionObject()->getVersionAuthorUserID())], 'ortic_forum') ?>
-            </td>
-            <td>
-                <?= $topic->messageCount - 1 ?>
+                <span class="ortic-original-poster-user"><?php View::element('user_link', ['user' => UserInfo::getByID($topic->getVersionObject()->getVersionAuthorUserID())], 'ortic_forum') ?></span>
+                <span class="ortic-original-poster-date"><?= $date->formatDateTime($topic->getCollectionDateAdded()) ?></span>
             </td>
             <td>
                 <a href="<?= $topic->getCollectionLink() ?>#message-<?=$topic->lastMessageId?>">
                     <?= $date->formatDateTime($topic->lastMessageCreated) ?>
                 </a>
+            </td>
+            <td>
+                <?= $topic->messageCount - 1 ?>
             </td>
             <td class="text-right">
                 <a href="<?= $topic->getCollectionLink() ?>" class="btn btn-xs btn-primary">
