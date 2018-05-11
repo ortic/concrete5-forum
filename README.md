@@ -17,10 +17,16 @@ You can customize the forum by copying `config/ortic_forum.php` to `application/
 * `admin_group` The group of users that has the permission to update and delete forum messages of others.
 * `attachment_fileset_name` The name of the fileset to which the files from the forum will be added.
 
+## Usage
+
+* Simply create a new page using the "forum" page type. You can have as many of those pages as you like. That allows you to have several topics.
+* There's a forum news block you can use to post a list of the most recent forum messages.
+
 ## Customizing output
 
-The forum uses single pages to render its output. Make sure you properly implement `view.php` in your theme. The forum will be rendered where `view.php` echo's `$innerContent`.
+* The forum uses single pages to render its output. Make sure you properly implement `view.php` in your theme. The forum will be rendered where `view.php` echo's `$innerContent`.
+* If that isn't enough, copy the content of https://github.com/ortic/concrete5-forum/blob/master/single_pages/forum.php to `application/single_pages/forum.php` and amend whatever you'd like to change. The same works for `forum_topic.php`.
+* If that isn't enough, create a file called `forum.php` in your theme. Include the header, footer and whatever else you include from your `view.php`. Instead of echoing the content of `$innerContent`, use the content of https://github.com/ortic/concrete5-forum/blob/master/single_pages/forum.php and change whatever you like.
 
-If that isn't enough, copy the content of https://github.com/ortic/concrete5-forum/blob/master/single_pages/forum.php to `application/single_pages/forum.php` and amend whatever you'd like to change. The same works for `topic.php`.
-
-If that isn't enough, create a file called `forum.php` in your theme. Include the header, footer and whatever else you include from your `view.php`. Instead of echoing the content of `$innerContent`, use the content of https://github.com/ortic/concrete5-forum/blob/master/single_pages/forum.php and change whatever you like.
+* You can also override the email by copying `new_answer.php` to your application's mail directory.
+* You can also override the elements. If you don't like the output of the avatar, copy `user_avatar.php` from `elements` to `application/elements` and change whatever you like.

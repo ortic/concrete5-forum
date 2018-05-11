@@ -44,7 +44,7 @@ $request = Request::getInstance();
             </td>
             <td class="text-right">
                 <a href="<?= $topic->getCollectionLink() ?>" class="btn btn-xs btn-primary">
-                    <?= t('Show Topic') ?>
+                    <?= t('Show') ?>
                 </a>
             </td>
         </tr>

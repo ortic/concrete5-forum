@@ -7,10 +7,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2018-04-19T09:04:44+02:00\n"
-"PO-Revision-Date: 2018-04-19T09:04:45+02:00\n"
+"POT-Creation-Date: 2018-05-11T19:13:33+02:00\n"
+"PO-Revision-Date: 2018-05-11 19:15+0200\n"
 "Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 1.8.11\n"
 
 #: packages/ortic_forum/install.xml:7
 msgctxt "PageTemplateName"
@@ -20,27 +21,25 @@ msgstr "Forum"
 #: packages/ortic_forum/install.xml:8
 msgctxt "PageTemplateName"
 msgid "Forum Topic"
-msgstr "Forum Thema"
+msgstr "Forum Diskussion"
 
 #: packages/ortic_forum/install.xml:11
 msgid "Forum"
 msgstr "Forum"
 
-#: packages/ortic_forum/install.xml:18
-#: packages/ortic_forum/install.xml:40
+#: packages/ortic_forum/install.xml:18 packages/ortic_forum/install.xml:40
 msgctxt "PageTypeComposerFormLayoutSetName"
 msgid "Basics"
 msgstr "Grundlagen"
 
-#: packages/ortic_forum/install.xml:19
-#: packages/ortic_forum/install.xml:41
+#: packages/ortic_forum/install.xml:19 packages/ortic_forum/install.xml:41
 msgctxt "PageTypeComposerFormLayoutSetControlCustomLabel"
 msgid "Page Name"
 msgstr "Seitenname"
 
 #: packages/ortic_forum/install.xml:33
 msgid "Forum Topic"
-msgstr "Forum Thema"
+msgstr "Forum Diskussion"
 
 #: packages/ortic_forum/controller.php:21
 msgid "Ortic Forum"
@@ -71,7 +70,7 @@ msgid "You must enter a subject"
 msgstr "Sie müssen einen Betreff eingeben"
 
 #: packages/ortic_forum/controllers/page_types/Forum.php:66
-#: packages/ortic_forum/controllers/page_types/ForumTopic.php:62
+#: packages/ortic_forum/controllers/page_types/ForumTopic.php:63
 msgid "You must enter a message"
 msgstr "Sie müssen eine Meldung eingeben"
 
@@ -79,17 +78,25 @@ msgstr "Sie müssen eine Meldung eingeben"
 msgid "Topic added"
 msgstr "Thema hinzugefügt"
 
-#: packages/ortic_forum/controllers/page_types/ForumTopic.php:88
+#: packages/ortic_forum/controllers/page_types/ForumTopic.php:90
 msgid "Message added"
 msgstr "Meldung hinzugefügt"
 
-#: packages/ortic_forum/controllers/page_types/ForumTopic.php:123
+#: packages/ortic_forum/controllers/page_types/ForumTopic.php:125
 msgid "Message updated."
 msgstr "Meldung aktualisiert."
 
-#: packages/ortic_forum/controllers/page_types/ForumTopic.php:158
+#: packages/ortic_forum/controllers/page_types/ForumTopic.php:160
 msgid "Message deleted."
 msgstr "Meldung gelöscht"
+
+#: packages/ortic_forum/controllers/page_types/ForumTopic.php:190
+msgid "Monitoring disabled."
+msgstr "Benachrichtigung deaktiviert."
+
+#: packages/ortic_forum/controllers/page_types/ForumTopic.php:205
+msgid "Monitoring enabled."
+msgstr "Benachrichtigung gestartet."
 
 #: packages/ortic_forum/elements/new_answer.php:3
 msgid "Add reply"
@@ -107,7 +114,7 @@ msgstr "Anhang"
 
 #: packages/ortic_forum/elements/new_answer.php:20
 msgid "Send email when new message is posted"
-msgstr ""
+msgstr "Email Benachrichtigung bei neuen Meldungen"
 
 #: packages/ortic_forum/elements/new_answer.php:23
 #: packages/ortic_forum/elements/new_topic.php:23
@@ -115,13 +122,11 @@ msgid "Post Message"
 msgstr "Antwort veröffentlichen"
 
 #: packages/ortic_forum/elements/new_answer.php:27
-#: packages/ortic_forum/elements/new_topic.php:27
-#, php-format
 msgid "Please <a href=\"%s\">sign in</a> or <a href=\"%s\">register</a> to write a new topic."
-msgstr "Bitte <a href=\"%s\">anmelden</a> oder <a href=\"%s\">registrieren</a> um ein Thema zu erstellen."
+msgstr "Bitte <a href=\"%s\">anmelden</a> oder <a href=\"%s\">registrieren</a> um eine Diskussion zu starten."
 
 #: packages/ortic_forum/elements/new_topic.php:3
-msgid "Create new topic"
+msgid "Start new discussion"
 msgstr "Thema erstellen"
 
 #: packages/ortic_forum/elements/new_topic.php:10
@@ -129,27 +134,14 @@ msgstr "Thema erstellen"
 msgid "Subject"
 msgstr "Betreff"
 
+#: packages/ortic_forum/elements/new_topic.php:27
+msgid "Please <a href=\"%s\">sign in</a> or <a href=\"%s\">register</a> to add a new discussion."
+msgstr "Bitte <a href=\"%s\">Anmelden</a> oder <a href=\"%s\">registrieren</a> , um eine neue Diskussion hinzufügen."
+
 #: packages/ortic_forum/elements/user_avatar.php:4
 #: packages/ortic_forum/elements/user_link.php:3
 msgid "Deleted User"
 msgstr "Gelöschter Benutzer"
-
-#: packages/ortic_forum/mail/new_answer.php:6
-#, php-format
-msgid ""
-"\n"
-"%s has posted to a forum topic you're monitoring: \n"
-"\n"
-"Message:\n"
-"\n"
-"%s\n"
-"\n"
-"Click the link below to view the discussion:\n"
-"%s\n"
-"\n"
-"Best regards\n"
-""
-msgstr ""
 
 #: packages/ortic_forum/single_pages/forum.php:19
 msgid "Author"
@@ -164,21 +156,33 @@ msgid "Last Activity Date"
 msgstr "Letzte Aktivität"
 
 #: packages/ortic_forum/single_pages/forum.php:47
-msgid "Show Topic"
-msgstr "Thema anzeigen"
+msgid "Show"
+msgstr "Anzeigen"
 
-#: packages/ortic_forum/single_pages/topic.php:28
+#: packages/ortic_forum/single_pages/forum_topic.php:21
+msgid "Stop Monitoring"
+msgstr "Benachrichtigung stoppen"
+
+#: packages/ortic_forum/single_pages/forum_topic.php:25
+msgid "Start Monitoring"
+msgstr "Benachrichtigung starten"
+
+#: packages/ortic_forum/single_pages/forum_topic.php:29
+msgid "Reply"
+msgstr "Antworten"
+
+#: packages/ortic_forum/single_pages/forum_topic.php:48
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: packages/ortic_forum/single_pages/topic.php:31
+#: packages/ortic_forum/single_pages/forum_topic.php:51
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: packages/ortic_forum/single_pages/topic.php:36
+#: packages/ortic_forum/single_pages/forum_topic.php:56
 msgid "Delete"
 msgstr "Löschen"
 
-#: packages/ortic_forum/single_pages/topic.php:53
+#: packages/ortic_forum/single_pages/forum_topic.php:73
 msgid "Save"
 msgstr "Speichern"

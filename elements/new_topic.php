@@ -1,6 +1,6 @@
 <hr>
 
-<h3><?= t('Create new topic') ?></h3>
+<h3><?= t('Start new discussion') ?></h3>
 
 <?php if (User::isLoggedIn()) { ?>
     <form method="POST" action="<?= $self->action('writeTopic') ?>" enctype="multipart/form-data">
@@ -24,6 +24,6 @@
     </form>
 <?php } else { ?>
     <div class="alert alert-info">
-        <?= t('Please <a href="%s">sign in</a> or <a href="%s">register</a> to write a new topic.', $self->action('login'), $self->action('register'))?>
+        <?= t('Please <a href="%s">sign in</a> or <a href="%s">register</a> to add a new discussion.', $self->action('login'), $self->action('register'))?>
     </div>
 <?php } ?>

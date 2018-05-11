@@ -41,7 +41,7 @@ class ForumTopic extends PageTypeController
         $this->set('isMonitoring', $forum->isMonitoring($currentPage));
         $this->set('currentPage', $currentPage);
 
-        $this->render('topic', 'ortic_forum');
+        $this->render('forum_topic', 'ortic_forum');
     }
 
     /**
