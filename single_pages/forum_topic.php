@@ -16,14 +16,16 @@ $token = Core::make('token');
     </div>
     <div class="col-xs-12 col-sm-3 text-right">
         <div class="btn-group" role="group">
-            <?php if ($isMonitoring) { ?>
-                <a href="<?=$this->action('stopMonitoring')?>" class="btn btn-default">
-                    <?=t('Stop Monitoring')?>
-                </a>
-            <?php } else { ?>
-                <a href="<?=$this->action('startMonitoring')?>" class="btn btn-default">
-                    <?=t('Start Monitoring')?>
-                </a>
+            <?php if ($user->isLoggedIn()) { ?>
+                <?php if ($isMonitoring) { ?>
+                    <a href="<?=$this->action('stopMonitoring')?>" class="btn btn-default">
+                        <?=t('Stop Monitoring')?>
+                    </a>
+                <?php } else { ?>
+                    <a href="<?=$this->action('startMonitoring')?>" class="btn btn-default">
+                        <?=t('Start Monitoring')?>
+                    </a>
+                <?php } ?>
             <?php } ?>
             <a href="#reply" class="btn btn-default">
                 <?=t('Reply')?>
