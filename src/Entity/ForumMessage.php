@@ -69,6 +69,11 @@ class ForumMessage implements FileTrackableInterface
     protected $attachmentFileId;
 
     /**
+     * @Column(type="integer", options={"default": 0, "unsigned"=true})
+     */
+    protected $views;
+
+    /**
      * @return mixed
      */
     public function getAttachmentFileId()
@@ -288,6 +293,24 @@ class ForumMessage implements FileTrackableInterface
     {
         $forum = Core::make('ortic/forum');
         return $forum->canEditMessage($this);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getViews()
+    {
+        return $this->views;
+    }
+
+    /**
+     * @param mixed $views
+     * @return ForumMessage
+     */
+    public function setViews($views)
+    {
+        $this->views = $views;
+        return $this;
     }
 
     /**

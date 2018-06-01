@@ -36,6 +36,8 @@ class ForumTopic extends PageTypeController
 
         $messages = $forum->getMessages($currentPage);
 
+        $forum->trackView($currentPage);
+
         $this->set('messages', $messages);
         $this->set('user', new User());
         $this->set('isMonitoring', $forum->isMonitoring($currentPage));
@@ -48,6 +50,7 @@ class ForumTopic extends PageTypeController
      * Adds a message to an existing topic
      *
      * @return \Concrete\Core\Routing\RedirectResponse
+     * @throws \Exception
      */
     public function writeAnswer()
     {
@@ -225,6 +228,17 @@ class ForumTopic extends PageTypeController
         }
 
         return trim($text);
+    }
+
+    /**
+     * Disable page caching if we want to track topic views. We can increase our count if the page is cached!
+     *
+     * @return bool
+     */
+    public function supportsPageCache()
+    {
+        $config = Core::make('ortic/forum/config');
+        return !$config->get('ortic_forum.track_topic_views');
     }
 
 }

@@ -19,6 +19,9 @@ $request = Request::getInstance();
         <th><?= t('Original Post') ?></th>
         <th><?= t('Last Post') ?></th>
         <th><?= t('Replies') ?></th>
+        <?php if ($showViews) { ?>
+            <th><?= t('Views') ?></th>
+        <?php } ?>
         <th></th>
     </tr>
     </thead>
@@ -43,6 +46,9 @@ $request = Request::getInstance();
             <td>
                 <?= $topic->messageCount - 1 ?>
             </td>
+            <?php if ($showViews) { ?>
+                <td><?= $topic->views ?></td>
+            <?php } ?>
             <td class="text-right">
                 <a href="<?= $topic->getCollectionLink() ?>" class="btn btn-xs btn-primary">
                     <?= t('Show') ?>

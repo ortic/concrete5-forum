@@ -35,6 +35,9 @@ class Forum extends PageTypeController
         $forum = Core::make('ortic/forum');
         $topicList = $forum->getTopics();
 
+        $config = Core::make('ortic/forum/config');
+        $trackViews = $config->get('ortic_forum.track_topic_views');
+
         $pagination = $topicList->getPagination();
         $topics = $pagination->getCurrentPageResults();
 
@@ -43,6 +46,7 @@ class Forum extends PageTypeController
         $this->set('user', new User());
         $this->set('forumTopicSubject', '');
         $this->set('forumTopicMessage', '');
+        $this->set('showViews', $trackViews);
 
         $this->render('forum', 'ortic_forum');
     }

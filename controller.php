@@ -14,7 +14,7 @@ class Controller extends Package
 {
     protected $pkgHandle = 'ortic_forum';
     protected $appVersionRequired = '5.8';
-    protected $pkgVersion = '0.0.6';
+    protected $pkgVersion = '0.0.7';
 
     public function getPackageName()
     {

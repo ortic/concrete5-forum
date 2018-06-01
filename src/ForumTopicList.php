@@ -20,7 +20,7 @@ class ForumTopicList extends PageList
         $finalQuery
             ->innerJoin('p', 'OrticForumMessages', 'ofm', 'p.cID = ofm.cID')
             ->andWhere('ofm.lastMessage=1')
-            ->addSelect('ofm.mID lastMessageId, ofm.dateCreated lastMessageCreated, ofm.userId lastMessageCreatedByUserId, (select count(*) from OrticForumMessages ofm where ofm.cID=p.cID) messageCount');
+            ->addSelect('ofm.mID lastMessageId, ofm.dateCreated lastMessageCreated, ofm.userId lastMessageCreatedByUserId, ofm.views, (select count(*) from OrticForumMessages ofm where ofm.cID=p.cID) messageCount');
 
         return $finalQuery;
     }
@@ -38,6 +38,7 @@ class ForumTopicList extends PageList
         $page->lastMessageCreated = $queryRow['lastMessageCreated'];
         $page->lastMessageCreatedByUserId = $queryRow['lastMessageCreatedByUserId'];
         $page->messageCount = $queryRow['messageCount'];
+        $page->views = $queryRow['views'];
 
         return $page;
     }

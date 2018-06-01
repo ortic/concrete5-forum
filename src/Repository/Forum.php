@@ -66,12 +66,29 @@ class Forum
         return $messages;
     }
 
+    public function trackView(Page $topicPage)
+    {
+        $pkg = Core::make(PackageService::class)->getByHandle('ortic_forum');
+        $em = $pkg->getEntityManager();
+
+        $messageList = new ForumMessageList();
+        $messageList->filterByTopicId($topicPage->getCollectionID());
+        $messages = $messageList->getResults();
+
+        foreach ($messages as $message) {
+            $message->setViews($message->getViews() + 1);
+            $em->persist($message);
+            $em->flush();
+        }
+    }
+
     /**
      * Adds a new answer for the current user to the topic specified by $topic.
      *
      * @param string $message
      * @param Version|null $attachment
      * @return ForumMessage
+     * @throws \Exception
      */
     public function writeAnswer(string $message, Version $attachment = null)
     {
