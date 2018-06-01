@@ -71,7 +71,7 @@ class ForumMessage implements FileTrackableInterface
     /**
      * @Column(type="integer", options={"default": 0, "unsigned"=true})
      */
-    protected $views;
+    protected $views = 0;
 
     /**
      * @return mixed
